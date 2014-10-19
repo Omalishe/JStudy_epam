@@ -24,6 +24,7 @@ public class HomeWork1_task2 {
     public static void main(String[] args) {
         Round rd = new Round(5,10,25);
         rd.moveTo(50, 20);
+        rd.setRadius(100.0);
         Dot randomDot = new Dot(10,10);
         String substr=rd.dotIsInRound(randomDot)?"":"not ";
         String outString = "The dot with coords ("+randomDot.getX()+","+randomDot.getY()+") does "
