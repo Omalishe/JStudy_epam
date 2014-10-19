@@ -68,7 +68,7 @@ class Circle{
     /**
      * @param radius the radius to set
      */
-    public void setRadius(int radius) {
+    public void setRadius(double radius) {
         this.radius = radius;
     }
 }
@@ -93,6 +93,10 @@ class Round extends Dot{
     
     public double getRadius(){
         return this.circle.getRadius();
+    }
+    
+    public void setRadius(double radius){
+        this.circle.setRadius(radius);
     }
     
 }
