@@ -5,6 +5,7 @@
  */
 package homework3;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -12,17 +13,68 @@ import java.util.Iterator;
  * @author oleksandr
  */
 
+
+class BlueRayDisc{
+    ArrayList<FileOnDisc> files;
+
+      
+    private class FileOnDisc{
+        boolean isFolder;
+        FileOnDisc parent;
+        String name;
+    }
+
+    public BlueRayDisc() {
+        files = new ArrayList<>();
+    }
+    
+    public BlueRayDisc(String initialFileName) {
+        files = new ArrayList<>();
+        FileOnDisc firstFile = new FileOnDisc();
+        firstFile.name = initialFileName;
+        files.add(firstFile);
+    }
+    
+    
+}
+
 class myDoubleLinkedList implements Iterator, Iterable{
     
     Node currentNode;
-    Header thisHeader;
+    Header header;
+    
+    public myDoubleLinkedList(Integer data){
+        this.header = new Header();
+        this.header.firstNode = new Node();
+        this.header.firstNode.data = data;
+        this.currentNode = this.header.firstNode;
+    }
+    
+    public myDoubleLinkedList(){
+        this.header = new Header();
+        this.header.firstNode = new Node();
+        this.currentNode = this.header.firstNode;
+    }
+    
+    
+    
     
     public void add(Integer data){
-        
+        myDoubleLinkedList.Node tempNode = new Node();
+        tempNode.data=data;
+        tempNode.prevNode = this.currentNode;
+        this.currentNode.nextNode = tempNode;
+        //this.currentNode.prevNode = this.currentNode;
+        this.currentNode = this.currentNode.nextNode;
+        this.header.lastNode = this.currentNode;
     }
     
     public void reset(){
-        this.currentNode = this.thisHeader.firstNode;
+        this.currentNode = this.header.firstNode;
+    }
+    
+    public void toLast(){
+        this.currentNode = this.header.lastNode;
     }
     
     
@@ -40,6 +92,10 @@ class myDoubleLinkedList implements Iterator, Iterable{
     @Override
     public boolean hasNext() {
         return this.currentNode!=null;
+    }
+    
+    public boolean hasPrevious(){
+        return this.currentNode.prevNode!=null;
     }
 
     @Override
@@ -130,6 +186,9 @@ public class HomeWork3 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.out.println("Linked list:---------------------------");
+        
+        
         myLinkedList mll = new myLinkedList(0);
         mll.add(1);
         mll.add(2);
@@ -141,6 +200,32 @@ public class HomeWork3 {
             myLinkedList.Node tl = (myLinkedList.Node) mll.next();
             System.out.println(tl.data);
         }
+        
+        
+        System.out.println("Double linked list:-------------------");
+        
+        myDoubleLinkedList mdll = new myDoubleLinkedList(0);
+        mdll.add(1);
+        mdll.add(2);
+        mdll.add(3);
+        mdll.add(4);
+        mdll.add(5);
+        
+        
+        System.out.println("Forward iteration");
+        mdll.reset();
+        while(mdll.hasNext()){
+            myDoubleLinkedList.Node tl = (myDoubleLinkedList.Node) mdll.next();
+            System.out.println(tl.data);
+        }
+        
+        System.out.println("Backward iteration");
+        mdll.toLast();
+        while(mdll.hasPrevious()){
+            myDoubleLinkedList.Node tl = (myDoubleLinkedList.Node) mdll.previous();
+            System.out.println(tl.data);
+        }
+
     }
     
 }
