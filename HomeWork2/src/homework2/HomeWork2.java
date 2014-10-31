@@ -123,14 +123,14 @@ public class HomeWork2 {
         //Task 3
         double accumulator = 1;
         String denominator="";
-        for (byte i=1;i<=6;i++){
+        for (byte i=1;i<=7;i++){
             denominator+="9";
             accumulator+=1./Integer.parseInt(denominator);
         }
         System.out.println("Left to right: "+accumulator);
         
         accumulator=0;
-        denominator="999999";
+        denominator="9999999";
         while (!"".equals(denominator)){
             accumulator+=1./Integer.parseInt(denominator);
             denominator = denominator.substring(1);
@@ -140,18 +140,18 @@ public class HomeWork2 {
         
         //Task 3.1 - one-string represention
         System.out.print("Left to right: ");
-        System.out.println(1+1/9+1/99+1/999+1/9999+1/99999+1/999999);
+        System.out.println(1+1/9+1/99+1/999+1/9999+1/99999+1/999999+1/9999999);
         
         System.out.print("Right to left: ");
-        System.out.println(1/999999+1/99999+1/9999+1/999+1/99+1/9+1);
+        System.out.println(1/9999999+1/999999+1/99999+1/9999+1/999+1/99+1/9+1);
         
         
         //Task 3.2 - one-string represention with forcing to double
         System.out.print("Left to right: ");
-        System.out.println(1+1./9+1./99+1./999+1./9999+1./99999+1./999999);
+        System.out.println(1+1./9+1./99+1./999+1./9999+1./99999+1./999999+1./9999999);
         
         System.out.print("Right to left: ");
-        System.out.println(1./999999+1./99999+1./9999+1./999+1./99+1./9+1);
+        System.out.println(1./9999999+1./999999+1./99999+1./9999+1./999+1./99+1./9+1);
 
 
     }
