@@ -54,6 +54,14 @@ class MyPriorityQueue<T>{
         if(topIndex!=0) siftDown(0,lastValue);
         return returnValue;
     }
+    
+    public T peek(){
+        return (size==0)?null:(T)queue[0];
+    }
+    
+    public int getSize(){
+        return size;
+    }
 
     private void siftUp(int i, T obj) {
         while (i>0){
@@ -110,18 +118,23 @@ public class HomeWork4_PriorityQueue {
         mpq.add(6);
         mpq.add(100);
         
-        for (int i=0;i<15;i++){
+        for (int i=0;i<mpq.getSize();i++){
             System.out.println(mpq.queue[i]);
         }
         
         System.out.println("----------------------");
         
-        for (int i=0;i<15;i++){
+        int size = mpq.getSize();
+        
+        for (int i=0;i<size;i++){
             System.out.println(mpq.poll());
         }
         
+        
+        for (int i=0;i<size;i++){
+            System.out.println(mpq.peek());
+        }
+        
+        
     }
-    
-    
-    
 }
