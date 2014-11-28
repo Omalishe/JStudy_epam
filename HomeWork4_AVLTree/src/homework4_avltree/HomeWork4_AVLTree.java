@@ -9,6 +9,18 @@ class MyAVLTree<E>{
     public MyAVLTree() {
         //this.root = new Node();
     }
+    
+    public Node findNodeByData(E data){
+        Node returnElement = null;
+        Node current = this.root;
+        while (current!=null){
+            if (current.data.equals(data)) return current;
+            returnElement = current;
+            if (comp.compare(current.data, data)<0) current = current.right;
+            else current = current.left;
+        }
+        return returnElement;
+    }
 
     public MyAVLTree(E data) {
         this.root = new Node(data);
@@ -26,7 +38,7 @@ class MyAVLTree<E>{
         child.parent = node.parent;
 
         node.right = child.left;
-        node.right.parent=node;
+        if (node.right!=null) node.right.parent=node;
 
         node.parent = child;
         child.left = node;
@@ -46,7 +58,7 @@ class MyAVLTree<E>{
         child.parent = node.parent;
 
         node.left = child.right;
-        node.left.parent=node;
+        if (node.left!=null) node.left.parent=node;
 
         node.parent = child;
         child.right = node;
@@ -79,8 +91,13 @@ class MyAVLTree<E>{
             this.root = returnElement;
         }
         
-        balanceTreeOnAdd(returnElement);
+        balanceTree(returnElement);
         return returnElement;
+    }
+    
+    public void deleteItem(E data){
+        Node deleted = findNodeByData(data);
+        deleteNode(deleted);
     }
     
     public void deleteNode(Node deleted){
@@ -100,7 +117,7 @@ class MyAVLTree<E>{
         if (successor.left==null) onlyChild = successor.right;
         else onlyChild=successor.left;
         
-        onlyChild.parent = successor.parent; //onlyChild could be a leaf (a null element)
+        if (onlyChild!=null) onlyChild.parent = successor.parent; //onlyChild could be a leaf (a null element)
         if (successor.parent!=null){
             if (successor.parent.left == successor) successor.parent.left = onlyChild;
             else successor.parent.right = onlyChild;
@@ -109,12 +126,42 @@ class MyAVLTree<E>{
         }
         
         deleted.data = successor.data;
+        balanceTree(successor);
         
         
     }
 
-    private void balanceTreeOnAdd(Node returnElement) {
-        returnElement.balanceParentNode(true);
+    private void balanceTree(Node balanceNode) {
+        Node parent = balanceNode.parent; //new node is balanced by default, so we start from its parent
+        while(parent!=null){
+            //int oldTreeHeight = parent.treeHeight;
+            parent.restoreBalanceFactor();
+            if (parent.balanceFactor<-1){ //balance heavy left side
+                if (parent.left.balanceFactor>=1){ //heavy right subtree of left tree - do big turn
+                    Node pl = parent.left;
+                    rotateLeft(pl);
+                    pl.restoreBalanceFactor();
+                    pl.restoreHeight();
+                }
+                rotateRight(parent); //TODO: restore height and balanceFactor
+                parent.restoreBalanceFactor();
+            }
+            if (parent.balanceFactor>1){ //balance heavy right side
+                if (parent.right.balanceFactor<=-1){//heavy left subtree of right tree - do big turn
+                    Node pr = parent.right;
+                    rotateRight(pr);
+                    pr.restoreBalanceFactor();
+                    pr.restoreHeight();
+                }
+                rotateLeft(parent); //TODO: restore height and balanceFactor
+                parent.restoreBalanceFactor();
+            }
+            parent.restoreHeight();
+            
+            //if (oldTreeHeight==parent.treeHeight) break; // if height isn't changed, everything up from here is already balanced
+            
+            parent = parent.parent;
+        }
     }
         
     class MyComparator implements Comparator {
@@ -122,7 +169,7 @@ class MyAVLTree<E>{
         @Override
         public int compare(Object o1, Object o2) {
             int returnValue = 0;
-            if (o1.hashCode()>o2.hashCode()) returnValue=1;
+            if (o1.hashCode()>o2.hashCode()) returnValue= 1;
             if (o1.hashCode()<o2.hashCode()) returnValue=-1;
             return returnValue;
         }
@@ -146,26 +193,18 @@ class MyAVLTree<E>{
             this.data=data;
         }
 
-        private void balanceParentNode(boolean newElement) {
-            int oldTreeHeight = treeHeight;
-            int leftHeight = this.left==null?-1:this.left.treeHeight;
-            int rightHeight = this.right==null?-1:this.right.treeHeight;
+        private void restoreBalanceFactor() {
+            int leftHeight = left==null?-1:left.treeHeight;
+            int rightHeight = right==null?-1:right.treeHeight;
             balanceFactor = rightHeight-leftHeight;
-            //make rotations
-            if (balanceFactor<-1){ //balance heavy left side
-                if (right.treeHeight>1){ //both left and right children are present
-                    if(right.left.treeHeight>right.right.treeHeight){
-                        
-                    }
-                }
-            }
-            if (balanceFactor>1){ //balance heavy right side
-                
-            }
-            treeHeight = leftHeight<rightHeight?rightHeight:leftHeight +1;
-            if (((treeHeight!=oldTreeHeight)||newElement)&&(parent!=null)) parent.balanceParentNode(false);
         }
-        
+
+        private void restoreHeight() {
+            int leftHeight = left==null?-1:left.treeHeight;
+            int rightHeight = right==null?-1:right.treeHeight;
+            treeHeight = (leftHeight<rightHeight?rightHeight:leftHeight) +1;
+        }
+
     }
 
     
@@ -183,12 +222,12 @@ public class HomeWork4_AVLTree {
         MyAVLTree.Node n19 = mrbt.add(19);
         MyAVLTree.Node n8 = mrbt.add(8);
         
-        mrbt.deleteNode(n38);
-        mrbt.deleteNode(n19);
-        mrbt.deleteNode(n41);
-        mrbt.deleteNode(n8);
-        mrbt.deleteNode(n12);
-        mrbt.deleteNode(n31);
+        mrbt.deleteItem(38);
+        mrbt.deleteItem(19);
+        mrbt.deleteItem(41);
+        mrbt.deleteItem(8);
+        mrbt.deleteItem(12);
+        mrbt.deleteItem(31);
     }
     
 }
