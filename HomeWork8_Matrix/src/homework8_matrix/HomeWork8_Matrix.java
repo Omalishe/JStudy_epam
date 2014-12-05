@@ -49,9 +49,6 @@ class MatrixMultiplier implements Runnable{
 
 public class HomeWork8_Matrix {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) throws InterruptedException {
         int n = 0;
         int k = 0;
