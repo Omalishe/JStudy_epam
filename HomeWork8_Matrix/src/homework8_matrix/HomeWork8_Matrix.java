@@ -110,13 +110,7 @@ public class HomeWork8_Matrix {
             threadPool[i].join(); //main thread waits all other to finish
         }
         System.out.println(LocalTime.now());
-        /*while(true){
-            boolean finished=true;
-            for(int i=0;i<k;i++){
-                if(threadPool[i].getState()!=Thread.State.TERMINATED) finished=false;
-            }
-            if (finished) break;
-        }*/
+  
         /*System.out.println("Source matrix A:");
         for (int i=0;i<n;i++){
             for (int j=0;j<n;j++){
