@@ -6,8 +6,6 @@
 package homework10_semaphore;
 
 import java.util.LinkedHashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class Semaphore{
     private final int maxQueue;
