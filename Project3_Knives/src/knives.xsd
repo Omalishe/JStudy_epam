@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="knives">
+        <xs:complexType>
+            <xs:sequence  minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="knife" type="knifeType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="knifeType">
+        <xs:sequence>
+            <xs:element type="knifeVariant" name="type"/>
+            <xs:element type="handyType" name="handy"/>
+            <xs:element type="xs:string" name="origin"/>
+            <xs:element type="visualCharacteristcs" name="visual"/>
+            <xs:element type="xs:boolean" name="value"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID"/>
+    </xs:complexType>
+    
+    <xs:simpleType name="knifeVariant">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="saber"/>
+            <xs:enumeration value="knife"/>
+            <xs:enumeration value="messer"/>
+            <xs:enumeration value="machete"/>
+            <xs:enumeration value="axe"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="handyType">
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="visualCharacteristcs">
+        <xs:sequence>
+            <xs:element name="length" type="min10double"/>
+            <xs:element name="width" type="min10double"/>
+            <xs:element name="knifeMaterial" type="knifeMaterialType"/>
+            <xs:element name="handlerMaterial">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="handlerMaterialType">
+                            <xs:attribute name="woodMaterial" type="woodMaterialType" use="optional"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="hasBloodGroove" type="xs:boolean"/>
+        </xs:sequence>
+        
+    </xs:complexType>
+    
+    <xs:simpleType name="min10double">
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="woodMaterialType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="oak"/>
+            <xs:enumeration value="fir"/>
+            <xs:enumeration value="ash"/>
+            <xs:enumeration value="poplar"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="knifeMaterialType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="steel"/>
+            <xs:enumeration value="copper"/>
+            <xs:enumeration value="iron"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="handlerMaterialType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="wood"/>
+            <xs:enumeration value="plastic"/>
+            <xs:enumeration value="metal"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
+</xs:schema>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knives
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='file:/home/oleksandr/NetBeansProjects/JStudy_epam/Project3_Knives/src/knives.xsd'>
+    <knife id="id1">
+        <type>saber</type>
+        <handy>1</handy>
+        <origin>zimbabue</origin>
+        <visual>
+            <length>20</length>
+            <width>20</width>
+            <knifeMaterial>copper</knifeMaterial>
+            <handlerMaterial woodMaterial="ash">wood</handlerMaterial>
+            <hasBloodGroove>true</hasBloodGroove>
+        </visual>
+        <value>false</value>
+    </knife>
+    <knife id="id2">
+        <type>machete</type>
+        <handy>1</handy>
+        <origin></origin>
+        <visual>
+            <length>20</length>
+            <width>11</width>
+            <knifeMaterial>copper</knifeMaterial>
+            <handlerMaterial>metal</handlerMaterial>
+            <hasBloodGroove>true</hasBloodGroove>
+        </visual>
+        <value>false</value>
+    </knife>
+</knives>
