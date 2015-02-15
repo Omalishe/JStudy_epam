@@ -1,0 +1,43 @@
+
+.login_bar {
+
+}
+
+.logo {
+
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    width: 90%;
+    text-align: center;
+    margin: 20px auto;
+}
+
+#main { background: #eee }
+
+#header {
+    height: 100px;
+    background: #aaa;
+}
+
+#footer {
+    height: 60px;
+    clear: left;
+    background: #aaa;
+}
+
+#indexLeftColumn {
+    height: 400px;
+    width: 250px;
+    float: left;
+    background: #ccc;
+}
+
+#indexRightColumn {
+    height: 400px;
+    width: 500px;
+    float: left;
+    background: #eee;
+    
+}

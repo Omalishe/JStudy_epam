@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="GeneralAppLog" fileName="logs/general.log" bufferedIO="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="GeneralErrorLog" fileName="logs/general_error.log" bufferedIO="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="coreLog" fileName="logs/core_error.log" bufferedIO="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="httpLog" fileName="logs/http_error.log" bufferedIO="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="sqlLog" fileName="logs/sql_error.log" bufferedIO="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="sqlQueryLog" fileName="logs/sql_query.log" bufferedIO="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="app.core" level="trace">
+            <AppenderRef ref="coreLog" level="error"/>
+        </Logger>
+        <Logger name="app.http" level="trace">
+            <AppenderRef ref="httpLog" level="error"/>
+        </Logger>
+        <Logger name="app.sql" level="trace">
+            <AppenderRef ref="sqlLog" level="error"/>
+            <AppenderRef ref="sqlQueryLog" level="info"/>
+        </Logger>
+        
+        <Logger name="app" level="info">
+            <AppenderRef ref="GeneralAppLog" level="info"/>
+            <AppenderRef ref="GeneralErrorLog" level="error"/>
+        </Logger>
+        
+        <Root level="error">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
