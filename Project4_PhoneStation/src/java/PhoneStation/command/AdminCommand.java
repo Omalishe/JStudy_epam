@@ -93,11 +93,11 @@ public class AdminCommand implements Command{
             selectedUserID=-1;
         }
         request.setAttribute("selectedUserId", selectedUserID);
+        DaoServices ds = DaoFactory.getDaoServices();
         
         switch(action){
             case "showAll": 
                 try {
-                    DaoServices ds = DaoFactory.getDaoServices();
                     List<Service> servicesList = ds.getServices(selectedUserID);
                     
                     DaoUsers du = DaoFactory.getDaoUsers();
@@ -130,6 +130,36 @@ public class AdminCommand implements Command{
                 break;
             case "serviceAddCompletion":
                 request.setAttribute("pageCaption", "pgcAddService");
+                String serviceName = "";
+                double cost = 0.0;
+                
+                boolean validated=true;
+                try {
+                    serviceName = request.getParameter("serviceName");
+                    cost = Double.parseDouble(request.getParameter("cost"));
+                } catch (NullPointerException|NumberFormatException e) {
+                    validated=false;
+                }
+                if (!validated){
+                    request.setAttribute("pageText", "lblServiceRegistrationFailure");
+                }else{
+                    Service svc = new Service();
+                    svc.setName(serviceName);
+                    svc.setPrice(cost);
+                    ds.addService(svc);
+                    request.setAttribute("pageText", "lblServiceRegistrationSucessful");
+                }
+
+                request.setAttribute("data", "actionResult");
+                request.setAttribute("userMenu", getUserMenu());
+                try {
+                    request.getRequestDispatcher(pages.ADMIN_PAGE.getValue()).forward(request, response);
+                } catch (ServletException ex) {
+                    httpLogger.error("http dispatch error:", ex);
+                } catch (IOException ex) {
+                    coreLogger.error("http dispatch error:", ex);
+                }
+                
                 
                 break;
             case "enableServices": //changeUserServices(request, response, selectedUserID, true); break;
@@ -484,7 +514,7 @@ public class AdminCommand implements Command{
                 request.setAttribute("data", "actionResult");
                 request.setAttribute("userMenu", getUserMenu());
                 try {
-                    request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
+                    request.getRequestDispatcher(pages.ADMIN_PAGE.getValue()).forward(request, response);
                 } catch (ServletException ex) {
                     httpLogger.error("http dispatch error:", ex);
                 } catch (IOException ex) {

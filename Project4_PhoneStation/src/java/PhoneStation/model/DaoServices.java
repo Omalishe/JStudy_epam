@@ -69,7 +69,17 @@ public class DaoServices {
     }
     
     public void addService(Service svc){
-        
+        String sqlStatement;
+        sqlStatement= "Insert into services values(null,?,?)";
+        try {
+            PreparedStatement preparedStatement;
+            preparedStatement = connection.prepareStatement(sqlStatement);
+            preparedStatement.setString(1, svc.getName());
+            preparedStatement.setDouble(2, svc.getPrice());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            sqlLogger.error("Error performing sql query: ", e);
+        }
     }
     
     public void updateService(Service svc){

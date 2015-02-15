@@ -229,6 +229,34 @@
         </div>
     </form>
 </c:if>    
+
+<c:if test="${data=='serviceAddForm'}">
+    <form action="admin" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="serviceName"><fmt:message key='lblServiceName'/></label>
+                <div class="controls">
+                    <input name="serviceName" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="cost"><fmt:message key='lblCost'/></label>
+                <div class="controls">
+                    <input name="cost" placeholder="<fmt:message key='plhCost'/>" class="input-xlarge" type="text">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-success" type="submit" name="action" value="serviceAddCompletion"><fmt:message key="btnAdd"/></button>
+                </div>
+            </div>
+            
+            <input type="hidden" name="section" value ="services">
+        </fieldset>
+    </form>
+</c:if>
+    
     
 <c:if test="${(data=='callRegisterForm')}">
     <form action="abonent" method="post">
