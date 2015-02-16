@@ -66,12 +66,12 @@ public class DaoUsers {
                 user.setIsDisabled(resultSet.getBoolean("is_blocked"));
                 user.setPhoneNumber(resultSet.getString("phone_number"));
                 user.setId(resultSet.getInt("id"));
+                return user;
             }
-            return user;
         } catch (SQLException ex) {
             sqlLogger.error("Error performing a query: ", ex);
-            return null;
         }
+        return null;
     }
     
     public boolean addUser(User user){
@@ -148,12 +148,12 @@ public class DaoUsers {
 
     public boolean updateUser(User user, boolean passwordChanged) {
         if (user == null) return false;
-        String sql = "update users set username = ?"
-                + "phone_number = ?"
-                + "is_admin = ?"
-                + "is_blocked = ?"
-                + (passwordChanged?"password = ?":"")
-                + "where id = ?";
+        String sql = "update users set username = ? , "
+                + "phone_number = ? , "
+                + "is_admin = ? , "
+                + "is_blocked = ? "
+                + (passwordChanged?" , password = ? ":"")
+                + " where id = ? ";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getUserName());

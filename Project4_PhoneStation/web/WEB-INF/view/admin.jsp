@@ -15,6 +15,7 @@
             <tr>
                 <th><fmt:message key="thName"/></th>
                 <th><fmt:message key="thPrice"/></th>
+                <th><fmt:message key="thEdit"/></th>
                 <th><fmt:message key="thDelete"/></th>
             </tr>
         </thead>
@@ -23,6 +24,13 @@
             <tr>
                 <td>${serviceEntry.name}</td>
                 <td>${serviceEntry.price}</td>
+                <td>
+                    <form action="admin" method="post">
+                        <input type ="hidden" name="section" value="services"/>
+                        <input type ="hidden" name="serviceId" value="${serviceEntry.id}"/>
+                        <button class="btn btn-primary" type="submit" name="action" value="serviceEditForm"><fmt:message key="btnEdit"/></button>
+                    </form>
+                </td>
                 <td>
                     <form action="admin" method="post">
                         <input type ="hidden" name="section" value="services"/>
@@ -63,6 +71,34 @@
             </div>
             
             <input type="hidden" name="section" value ="services">
+        </fieldset>
+    </form>
+</c:if> 
+    
+    
+<c:if test="${data=='serviceEditForm'}">
+    <form action="admin" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="serviceName"><fmt:message key='lblServiceName'/></label>
+                <div class="controls">
+                    <input value="${editedService.name}" name="serviceName" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="cost"><fmt:message key='lblCost'/></label>
+                <div class="controls">
+                    <input value="${editedService.price}" name="cost" placeholder="<fmt:message key='plhCost'/>" class="input-xlarge" type="text">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-success" type="submit" name="action" value="serviceEditCompletion"><fmt:message key="btnEdit"/></button>
+                </div>
+            </div>
+            <input type="hidden" name="serviceId" value="${editedService.id}"/>
+            <input type="hidden" name="section" value ="services"/>
         </fieldset>
     </form>
 </c:if>  
@@ -322,38 +358,3 @@
         </div>
     </form>
 </c:if> 
-
-    
-    
-<c:if test="${(data=='callRegisterForm')}">
-    <form action="abonent" method="post">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="registerDate"><fmt:message key='lblRegisterDate'/></label>
-                <div class="controls">
-                    <input value="${registerDate}" name="registerDate" placeholder="<fmt:message key='plhDate'/>" class="input-xlarge" type="text">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="duration"><fmt:message key='lblDuration'/></label>
-                <div class="controls">
-                    <input name="duration" placeholder="<fmt:message key='plhDuration'/>" class="input-xlarge" type="text">
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="cost"><fmt:message key='lblCost'/></label>
-                <div class="controls">
-                    <input name="cost" placeholder="<fmt:message key='plhCost'/>" class="input-xlarge" type="text">
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-success" type="submit" name="action" value="registerComplete"><fmt:message key="btnAdd"/></button>
-                </div>
-            </div>
-            
-            <input type="hidden" name="section" value ="calls">
-        </fieldset>
-    </form>
-</c:if>

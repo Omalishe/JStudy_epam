@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -123,6 +124,41 @@ public class DaoServices {
         }
     }
     
+    public Service getServiceById(int serviceId) {
+        String sql = "select * from services where id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, serviceId);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                Service svc = new Service();
+                svc.setId(resultSet.getInt("id"));
+                svc.setName(resultSet.getString("name"));
+                svc.setPrice(resultSet.getDouble("price"));
+                return svc;
+            }
+        } catch (SQLException ex) {
+            sqlLogger.error("Error performing query: ", ex);
+        }
+        return null;
+    }
+    
+    public boolean updateService(Service svc) {
+        String sql = "update services set name = ?, price = ? where id = ?";
+        
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, svc.getName());
+            statement.setDouble(2, svc.getPrice());
+            statement.setInt(3, svc.getId());
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            sqlLogger.error("Error performing sql query: ", ex);
+            return false;
+        }
+    }
+    
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -131,6 +167,8 @@ public class DaoServices {
             super.finalize();
         }
     }
+
+
 
     
     

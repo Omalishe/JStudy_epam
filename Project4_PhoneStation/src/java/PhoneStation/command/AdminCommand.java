@@ -5,8 +5,6 @@
  */
 package PhoneStation.command;
 
-import PhoneStation.beans.Bill;
-import PhoneStation.beans.Call;
 import PhoneStation.beans.MenuEntry;
 import PhoneStation.beans.UserMenu;
 import PhoneStation.model.DaoFactory;
@@ -23,12 +21,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -160,6 +155,7 @@ public class AdminCommand implements Command{
                 dispatchRequest(request, response, "serviceAddForm", "pgcAddService");
                 break;
             case "serviceAddCompletion":
+            {
                 String serviceName = "";
                 double cost = 0.0;
                 
@@ -177,12 +173,60 @@ public class AdminCommand implements Command{
                     Service svc = new Service();
                     svc.setName(serviceName);
                     svc.setPrice(cost);
-                    ds.addService(svc);
-                    request.setAttribute("pageText", "lblServiceRegistrationSucessful");
+                    if (ds.addService(svc)) request.setAttribute("pageText", "lblServiceRegistrationSucessful");
+                    else request.setAttribute("pageText", "lblServiceRegistrationFailure");
                 }
 
                 dispatchRequest(request, response ,"actionResult","pgcAddService");
+            }
+                break;
+            case "serviceEditForm": 
+            {
+                int serviceId=0;
+                try {
+                    serviceId = Integer.parseInt(request.getParameter("serviceId"));
+                } catch (NumberFormatException|NullPointerException numberFormatException) {
+                    serviceId = -1;
+                }
+                Service svc = ds.getServiceById(serviceId);
+                request.setAttribute("editedService", svc);
+                dispatchRequest(request, response, "serviceEditForm", "pgcServiceEdit");
+            }   
+                break;
+            case "serviceEditCompletion": 
+            {
                 
+                int serviceId=0;
+                boolean validated=true;
+                try {
+                    serviceId = Integer.parseInt(request.getParameter("serviceId"));
+                } catch (NumberFormatException|NullPointerException numberFormatException) {
+                    serviceId = -1;
+                    validated = false;
+                }
+                Service svc = ds.getServiceById(serviceId);
+                
+                String serviceName = "";
+                double cost = 0.0;
+                
+                try {
+                    serviceName = request.getParameter("serviceName");
+                    cost = Double.parseDouble(request.getParameter("cost"));
+                } catch (NullPointerException|NumberFormatException e) {
+                    validated=false;
+                }
+                
+                if (!validated){
+                    request.setAttribute("pageText", "lblServiceModificationFailure");
+                }else{
+                    svc.setName(serviceName);
+                    svc.setPrice(cost);
+                    if (ds.updateService(svc)) request.setAttribute("pageText", "lblServiceModificationSuccessful");
+                    else request.setAttribute("pageText", "lblServiceModificationFailure");
+                }
+
+                dispatchRequest(request, response ,"actionResult","pgcServiceEdit");
+            }
                 break;
             case "serviceDelete": 
                 int serviceId=0;
@@ -191,30 +235,11 @@ public class AdminCommand implements Command{
                 } catch (NumberFormatException|NullPointerException numberFormatException) {
                     serviceId = -1;
                 }
-                ds.deleteService(serviceId);
-                request.setAttribute("pageText", "lblServiceDeletionSuccessful");
+                if (ds.deleteService(serviceId)) request.setAttribute("pageText", "lblServiceDeletionSuccessful");
+                else request.setAttribute("pageText", "lblServiceDeletionFailure");
                 dispatchRequest(request, response, "actionResult", "pgcServices");
                 break;
-            case "enableServices": //changeUserServices(request, response, selectedUserID, true); break;
-            case "disableServices": //changeUserServices(request, response, selectedUserID, false); break;
             default: displayMenu(request, response);
-        }
-    }
-    
-    private void changeUserServices(HttpServletRequest request, HttpServletResponse response, int selectedUserID, boolean enable){
-        String[] checked_services = request.getParameterValues("checked_services");
-        if (checked_services!=null) {
-            DaoServices ds = DaoFactory.getDaoServices();
-            for (String id : checked_services) {
-                ds.changeUserServices(Integer.parseInt(id), selectedUserID, enable);
-            }
-            
-            if (enable) request.setAttribute("pageText","lblServiceLinkSuccess");
-            else request.setAttribute("pageText","lblServiceUnlinkSuccess");
-            
-            dispatchRequest(request, response, "actionResult","pgcServices");
-        }else{
-            displayMenu(request, response);
         }
     }
 
@@ -248,8 +273,8 @@ public class AdminCommand implements Command{
                 dispatchRequest(request, response, "bills", "pgcBills");
                 break;
             case "createBill":
-                db.createBill(selectedUserID, startDate, endDate);
-                request.setAttribute("pageText", "lblBillCreationSuccessful");
+                if (db.createBill(selectedUserID, startDate, endDate)) request.setAttribute("pageText", "lblBillCreationSuccessful");
+                else request.setAttribute("pageText", "lblBillCreationFailure");
                 dispatchRequest(request, response, "actionResult", "pgcBills");
                 break;
                 
@@ -327,9 +352,8 @@ public class AdminCommand implements Command{
                     user.setIsDisabled(isBlocked);
                     user.setPhoneNumber(phoneNumber);
                     
-                    daoUsers.addUser(user);
-                    
-                    request.setAttribute("pageText", "lblAbonentRegistrationSucessful");
+                    if (daoUsers.addUser(user)) request.setAttribute("pageText", "lblAbonentRegistrationSucessful");
+                    else request.setAttribute("pageText", "lblAbonentRegistrationFailure");
                 }
 
                 request.setAttribute("data", "actionResult");
@@ -373,7 +397,7 @@ public class AdminCommand implements Command{
                 }
 
                 request.setAttribute("data", "actionResult");
-                dispatchRequest(request, response, "actionResult", "pgcAddAbonent");}
+                dispatchRequest(request, response, "actionResult", "pgcEditAbonent");}
                 
                 break;
             case "deleteAbonent": 

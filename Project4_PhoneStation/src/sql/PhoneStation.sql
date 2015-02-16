@@ -124,7 +124,7 @@ CREATE TABLE `services` (
 
 LOCK TABLES `services` WRITE;
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
-INSERT INTO `services` VALUES (1,'internet',100),(3,'cute number',10),(4,'over 15 minutes discount',20);
+INSERT INTO `services` VALUES (1,'interne',100),(3,'cute number',10),(4,'over 15 minutes discount',20);
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +213,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'alterne','1',NULL,'r23',0,1),(3,'july','22',NULL,'09309',1,0),(4,'vinsent','33','2015-02-15 22:00:00','30498',0,0),(5,'cracken','1','2015-02-15 22:00:00','1334',0,0),(6,'admin','1234','2015-02-15 22:00:00','',1,1);
+INSERT INTO `users` VALUES (1,'alterne','1',NULL,'r23',1,0),(3,'july','22',NULL,'09309',1,0),(4,'vinsent','33','2015-02-15 22:00:00','30498',0,0),(6,'admin','1234','2015-02-15 22:00:00','',1,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,4 +264,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-16 16:01:06
+-- Dump completed on 2015-02-16 18:21:17
