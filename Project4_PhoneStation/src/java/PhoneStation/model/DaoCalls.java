@@ -40,7 +40,7 @@ public class DaoCalls {
         return getCallsByUserId(userID, startDate, endDate);
     }
     
-    public List<Call> getCallsByUserId(int userID, Date startDate, Date endDate) {
+    private List<Call> getCallsByUserId(int userID, Date startDate, Date endDate) {
         List<Call> calls = new ArrayList<>();
         String sql = "select * from placed_calls where time_start between ? and ?"+(userID==-1?"":" and users_id = ? ");
         PreparedStatement preparedStatement;
@@ -66,7 +66,7 @@ public class DaoCalls {
         return null;
     }
 
-    public void registerCall(Call call) {
+    public boolean registerCall(Call call) {
         String sql = "insert into placed_calls values (null,?,?,?,?)";
         PreparedStatement statement;
         try {
@@ -76,8 +76,10 @@ public class DaoCalls {
             statement.setDouble(3, call.getCost());
             statement.setInt(4, call.getUsersId());
             statement.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             sqlLogger.error("Error on sql: ",ex);
+            return false;
         }
     }
 

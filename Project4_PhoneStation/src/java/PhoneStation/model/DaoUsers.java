@@ -48,11 +48,32 @@ public class DaoUsers {
             return users;
         } catch (SQLException ex) {
             sqlLogger.error("Error performing a query: ", ex);
+            return null;
         }
-        return null;
     }
     
-    public void addUser(User user){
+    public User getUserById(int id){
+        User user = new User();
+        String sql="select * from users where id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                user.setUserName(resultSet.getString("username"));
+                user.setIsAdmin(resultSet.getBoolean("is_admin"));
+                user.setIsDisabled(resultSet.getBoolean("is_blocked"));
+                user.setPhoneNumber(resultSet.getString("phone_number"));
+                user.setId(resultSet.getInt("id"));
+            }
+            return user;
+        } catch (SQLException ex) {
+            sqlLogger.error("Error performing a query: ", ex);
+            return null;
+        }
+    }
+    
+    public boolean addUser(User user){
         java.sql.Date addDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
         String sql="insert into users values(null,?,?,?,?,?,?)";
         try {
@@ -64,13 +85,15 @@ public class DaoUsers {
             statement.setBoolean(5, user.isIsAdmin());
             statement.setBoolean(6, user.isIsDisabled());
             statement.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             sqlLogger.error("Error performing query: ",ex);
+            return false;
         }
         
     }
     
-    public void enableUserByID(int userID, boolean enable){
+    private boolean enableUserByID(int userID, boolean enable){
         String sql = "update users set is_blocked = ? where id = ?";
         boolean blocked = !enable;
         
@@ -79,22 +102,48 @@ public class DaoUsers {
             statement.setBoolean(1, blocked);
             statement.setInt(2, userID);
             statement.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             sqlLogger.error("Error peroforming query: ", ex);
+            return false;
         }
     }
     
-    public void enableUser (int userID, boolean enable){
-        enableUserByID(userID, enable);
+    public boolean enableUser (int userID, boolean enable){
+        return enableUserByID(userID, enable);
     }
     
-    public void enableUser (User user, boolean enable){
-        if (user==null) enableUserByID(-1,enable);
-        else enableUserByID(user.getId(),enable);
+    public boolean enableUser (User user, boolean enable){
+        if (user==null) return enableUserByID(-1,enable);
+        else return enableUserByID(user.getId(),enable);
+    }
+    
+    public boolean deleteUser(int selectedUserID) {
+        return deleteUserById(selectedUserID);
+    }
+    
+    public boolean deleteUser(User user) {
+        if (user==null) return deleteUserById(-1);
+        else return deleteUserById(user.getId());
+    }
+    
+    private boolean deleteUserById(int selectedUserID) {
+        String sql = "delete from users where id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, selectedUserID);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            sqlLogger.error("Error performing query: ", ex);
+            return false;
+        }
     }
     
     @Override
     protected void finalize() throws Throwable {
         connection.close();
     }
+
+
 }

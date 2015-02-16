@@ -10,12 +10,12 @@
 </c:if>
     
 <c:if test="${(data=='services')}">
-    <form action="admin" method="post">
     <table class="table table-hover">
         <thead>
             <tr>
                 <th><fmt:message key="thName"/></th>
                 <th><fmt:message key="thPrice"/></th>
+                <th><fmt:message key="thDelete"/></th>
             </tr>
         </thead>
         <tbody>
@@ -23,18 +23,49 @@
             <tr>
                 <td>${serviceEntry.name}</td>
                 <td>${serviceEntry.price}</td>
+                <td>
+                    <form action="admin" method="post">
+                        <input type ="hidden" name="section" value="services"/>
+                        <input type ="hidden" name="serviceId" value="${serviceEntry.id}"/>
+                        <button class="btn btn-danger" type="submit" name="action" value="serviceDelete"><fmt:message key="btnDelete"/></button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
+    <form action="admin" method="post">
     <input type ="hidden" name="section" value="services">
     <button class="btn btn-success" type="submit" name="action" value="serviceAddForm"><fmt:message key="btnAdd"/></button>
     </form>
 </c:if>
 
 <c:if test="${data=='serviceAddForm'}">
-    
-</c:if>    
+    <form action="admin" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="serviceName"><fmt:message key='lblServiceName'/></label>
+                <div class="controls">
+                    <input name="serviceName" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="cost"><fmt:message key='lblCost'/></label>
+                <div class="controls">
+                    <input name="cost" placeholder="<fmt:message key='plhCost'/>" class="input-xlarge" type="text">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-success" type="submit" name="action" value="serviceAddCompletion"><fmt:message key="btnAdd"/></button>
+                </div>
+            </div>
+            
+            <input type="hidden" name="section" value ="services">
+        </fieldset>
+    </form>
+</c:if>  
     
 <c:if test="${(data=='bills')}">
     <form action="admin" method="post">
@@ -94,6 +125,7 @@
         </fieldset>
     </form>
 </c:if>
+
 <c:if test="${(data=='callsListing')}">
     <form action="admin" method="post">
         <fieldset>
@@ -161,6 +193,7 @@
                 <th><fmt:message key="thAdmin"/></th>
                 <th><fmt:message key="thBlocked"/></th>
                 <th><fmt:message key="thEdit"/></th>
+                <th><fmt:message key="thDelete"/></th>
             </tr>
         </thead>
         <tbody>
@@ -171,7 +204,20 @@
                 <td>${userEntry.phoneNumber}</td>
                 <td>${userEntry.isAdmin}</td>
                 <td>${userEntry.isDisabled}</td>
-                <td>${userEntry.isDisabled}</td>
+                <td>
+                    <form action="admin" method ="post">
+                        <input type="hidden" name="selectedUserId" value="${userEntry.id}"/>
+                        <input type="hidden" name="section" value ="abonents">
+                        <button class="btn btn-primary" type="submit" name="action" value="editAbonent"><fmt:message key="btnEdit"/></button>
+                    </form>
+                </td>
+                <td>
+                    <form action="admin" method ="post">
+                        <input type="hidden" name="selectedUserId" value="${userEntry.id}"/>
+                        <input type="hidden" name="section" value ="abonents">
+                        <button class="btn btn-danger" type="submit" name="action" value="deleteAbonent"><fmt:message key="btnDelete"/></button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>
@@ -230,32 +276,7 @@
     </form>
 </c:if>    
 
-<c:if test="${data=='serviceAddForm'}">
-    <form action="admin" method="post">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="serviceName"><fmt:message key='lblServiceName'/></label>
-                <div class="controls">
-                    <input name="serviceName" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
-                </div>
-            </div>
 
-            <div class="control-group">
-                <label class="control-label" for="cost"><fmt:message key='lblCost'/></label>
-                <div class="controls">
-                    <input name="cost" placeholder="<fmt:message key='plhCost'/>" class="input-xlarge" type="text">
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-success" type="submit" name="action" value="serviceAddCompletion"><fmt:message key="btnAdd"/></button>
-                </div>
-            </div>
-            
-            <input type="hidden" name="section" value ="services">
-        </fieldset>
-    </form>
-</c:if>
     
     
 <c:if test="${(data=='callRegisterForm')}">

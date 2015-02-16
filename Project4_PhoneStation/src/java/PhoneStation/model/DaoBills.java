@@ -40,7 +40,7 @@ public class DaoBills {
         return getBillsByUserID(userID, startDate, endDate, pending);
     }
 
-    public List<Bill> getBillsByUserID(int userID, Date startDate, Date endDate, boolean pending) {
+    private List<Bill> getBillsByUserID(int userID, Date startDate, Date endDate, boolean pending) {
         List<Bill> bills = new ArrayList<>();
         String sql = "select * from pay_bills where date_issued between ? and ?"+(pending?" and is_payed=false ":"")+(userID==-1?"":" users_id = ? ");
         PreparedStatement preparedStatement;
@@ -67,20 +67,22 @@ public class DaoBills {
         return null;
     }
 
-    public void payBill(int billId) {
+    public boolean payBill(int billId) {
         String sql = "update pay_bills set is_payed=true where id = ?";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(sql);
             statement.setInt(1, billId);
             statement.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             sqlLogger.error("Error on sql: ",ex);
+            return false;
         }
     }
 
-    public void createBill(int selectedUserID, Date startDate, Date endDate) {
-        
+    public boolean createBill(int selectedUserID, Date startDate, Date endDate) {
+        return false;
     }
     
     @Override

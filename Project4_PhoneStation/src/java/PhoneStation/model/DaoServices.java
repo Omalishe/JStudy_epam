@@ -37,7 +37,7 @@ public class DaoServices {
         return getServicesByUserID(UserID);
     }
 
-    public List<Service> getServicesByUserID(int userID) {
+    private List<Service> getServicesByUserID(int userID) {
         List<Service> services = new ArrayList<>();
         try {
             PreparedStatement preparedStatement;
@@ -68,7 +68,7 @@ public class DaoServices {
         return getServicesByUserID(-1);
     }
     
-    public void addService(Service svc){
+    public boolean addService(Service svc){
         String sqlStatement;
         sqlStatement= "Insert into services values(null,?,?)";
         try {
@@ -77,20 +77,14 @@ public class DaoServices {
             preparedStatement.setString(1, svc.getName());
             preparedStatement.setDouble(2, svc.getPrice());
             preparedStatement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             sqlLogger.error("Error performing sql query: ", e);
+            return false;
         }
     }
     
-    public void updateService(Service svc){
-        
-    }
-    
-    public void removeService(Service svc){
-        
-    }
-    
-    public void changeUserServices(Integer svcId, Integer userId, boolean enable){
+    public boolean changeUserServices(Integer svcId, Integer userId, boolean enable){
         String sqlStatement;
         if (enable) sqlStatement= "Insert ignore into connected_services values(?,?)";
         else sqlStatement = "delete from connected_services where users_id = ? and services_id = ?";
@@ -100,8 +94,32 @@ public class DaoServices {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, svcId);
             preparedStatement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             sqlLogger.error("Error performing sql query: ", e);
+            return false;
+        }
+    }
+    
+    public boolean deleteService(int serviceId) {
+        return deleteServiceById(serviceId);
+    }
+    
+    public boolean deleteService(Service svc){
+        if (svc==null) return deleteServiceById(-1);
+        else return deleteServiceById(svc.getId());
+    }
+    
+    private boolean deleteServiceById(int serviceId){
+        String sql = "delete from services where id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, serviceId);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            sqlLogger.error("Error performing query: ", ex);
+            return false;
         }
     }
     
@@ -113,6 +131,7 @@ public class DaoServices {
             super.finalize();
         }
     }
+
     
     
     

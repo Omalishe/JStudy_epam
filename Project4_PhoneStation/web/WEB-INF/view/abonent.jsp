@@ -40,7 +40,7 @@
     </form>
 </c:if>
 <c:if test="${(data=='bills')}">
-    <form action="abonent" method="post">
+        <form action="abonent" method="post">
         <fieldset>
         <div class="row">
             <div class="col-md-3">
@@ -54,7 +54,10 @@
             <div class="col-md-3">
                 <button class="btn btn-success" type="submit" name="action" value="${showAction}"><fmt:message key="btnUpdateView"/></button>
             </div>  
+            <input type="hidden" name="section" value ="bills">
         </div>
+        </fieldset>
+        </form>
         <div class="container">
         <table class="table table-hover">
         <thead>
@@ -72,9 +75,12 @@
                 <td>${billEntry.payMonth}</td>
                 <td>${billEntry.amount}</td>
                 <td>
-                    <c:if test="${billEntry.isPayed}==true">
-                    <input type="hidden" name ="billId" value="${billEntry.id}">
-                    <button class="btn btn-success" type="submit" name="action" value="payBill"><fmt:message key="btnPayBill"/></button>
+                    <c:if test="${billEntry.isPayed}!=true">
+                        <form action="abonent" method="post">
+                            <input type="hidden" name ="billId" value="${billEntry.id}">
+                            <input type="hidden" name="section" value ="bills">
+                            <button class="btn btn-success" type="submit" name="action" value="payBill"><fmt:message key="btnPayBill"/></button>
+                        </form> 
                     </c:if>
                 </td>
             </tr>
@@ -82,9 +88,6 @@
         </tbody>
     </table>
         </div>    
-        <input type="hidden" name="section" value ="bills">
-        </fieldset>
-    </form>
 </c:if>
 <c:if test="${(data=='callsListing')}">
     <form action="abonent" method="post">

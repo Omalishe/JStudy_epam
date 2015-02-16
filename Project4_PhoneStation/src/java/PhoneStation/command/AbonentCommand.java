@@ -71,32 +71,85 @@ class AbonentCommand implements Command {
         
     }
     
+    private Date getStartDateOrStartOfMonth(HttpServletRequest request, DateFormat df){
+        //DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar cal = Calendar.getInstance();
+        Date startDate;
+        try {
+            startDate = df.parse((String)request.getParameter("startDate"));
+        } catch (ParseException |NullPointerException ex) {
+            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE,0);
+            cal.set(Calendar.SECOND,0);
+            cal.set(Calendar.MILLISECOND,0);
+            startDate = cal.getTime();
+        }
+        return startDate;
+    }
+    
+    private Date getEndDateOrEndOfMonth(HttpServletRequest request, DateFormat df){
+        Date endDate;
+        Calendar cal = Calendar.getInstance();
+        
+        try {
+            endDate = df.parse((String)request.getParameter("endDate"));
+        } catch (ParseException|NullPointerException ex) {
+            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE,59);
+            cal.set(Calendar.SECOND,59);
+            cal.set(Calendar.MILLISECOND,999);
+            endDate = cal.getTime();
+        }
+        return endDate;
+    }
+    
+    private int getSelectedUserId(HttpServletRequest request){
+        int selectedUserID;
+        try {
+            selectedUserID = Integer.parseInt((String) request.getParameter("selectedUserId"));
+        } catch (NumberFormatException numberFormatException) {
+            coreLogger.error("Error getting selected user id;", numberFormatException);
+            selectedUserID=-1;
+        } catch (NullPointerException e){
+            selectedUserID=-1;
+        }
+        return selectedUserID;
+    }
+    
+    public void dispatchRequest(HttpServletRequest request, HttpServletResponse response, String data, String pageCaption){
+        request.setAttribute("data", data);
+        request.setAttribute("pageCaption", pageCaption);
+        request.setAttribute("userMenu", getUserMenu());
+        try {
+            request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
+        } catch (ServletException ex) {
+            httpLogger.error("http dispatch error:", ex);
+        } catch (IOException ex) {
+            coreLogger.error("http dispatch error:", ex);
+        }
+    }
+    
     private void processServices(HttpServletRequest request, HttpServletResponse response){
         String action = (String)request.getParameter("action");
         if (action==null) action = "";
         User user = null;
+        DaoServices ds = DaoFactory.getDaoServices();
+        
         switch(action){
             case "showMy": 
                 HttpSession ses = request.getSession();
                 user = (User) ses.getAttribute("currentUser");
             case "showAll": 
-                try {
-                    DaoServices ds = DaoFactory.getDaoServices();
-                    List<Service> servicesList = ds.getServices(user);
                     
-                    request.setAttribute("servicesList", servicesList);
-                    request.setAttribute("pageCaption", "pgcServices");
-                    request.setAttribute("userMenu", getUserMenu());
-                    
-                    if ("showMy".equals(action))request.setAttribute("data", "myServices");
-                    else request.setAttribute("data", "services");
-                    
-                    request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
-                } catch (ServletException ex) {
-                    httpLogger.error("http dispatch error:", ex);
-                } catch (IOException ex) {
-                    coreLogger.error("http dispatch error:", ex);
-                }
+                request.setAttribute("servicesList", ds.getServices(user));
+                
+                String data = "";
+                if ("showMy".equals(action))data="myServices";
+                else data="services";
+                
+                dispatchRequest(request, response, data, "pgcServices");
                 break;
             case "enableServices": changeUserServices(request, response, true); break;
             case "disableServices": changeUserServices(request, response, false); break;
@@ -116,17 +169,7 @@ class AbonentCommand implements Command {
             if (enable) request.setAttribute("pageText","lblServiceLinkSuccess");
             else request.setAttribute("pageText","lblServiceUnlinkSuccess");
             
-            request.setAttribute("data", "actionResult");
-            request.setAttribute("userMenu", getUserMenu());
-            request.setAttribute("pageCaption", "pgcServices");
-            
-            try {
-                request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
-            } catch (ServletException ex) {
-                httpLogger.error("http dispatch error:", ex);
-            } catch (IOException ex) {
-                coreLogger.error("http dispatch error:", ex);
-            }
+            dispatchRequest(request, response, "actionResult", "pgcServices");
         }else{
             displayMenu(request, response);
         }
@@ -134,10 +177,11 @@ class AbonentCommand implements Command {
 
     private void processBills(HttpServletRequest request, HttpServletResponse response){
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        Date startDate;
-        Date endDate;
-        Calendar cal = Calendar.getInstance();
-        
+        Date startDate = getStartDateOrStartOfMonth(request, df);
+        Date endDate = getEndDateOrEndOfMonth(request, df);
+        request.setAttribute("startDate", df.format(startDate));
+        request.setAttribute("endDate", df.format(endDate));
+
         String action = (String)request.getParameter("action");
         if (action==null) action = "";
         request.setAttribute("showAction", action); //for update forms
@@ -146,134 +190,47 @@ class AbonentCommand implements Command {
         User user = (User) ses.getAttribute("currentUser");
         boolean pending = false;
         
-        try {
-            startDate = df.parse((String)request.getParameter("startDate"));
-        } catch (ParseException |NullPointerException ex) {
-            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE,0);
-            cal.set(Calendar.SECOND,0);
-            cal.set(Calendar.MILLISECOND,0);
-            startDate = cal.getTime();
-        }
-        
-        
-        try {
-            endDate = df.parse((String)request.getParameter("endDate"));
-        } catch (ParseException|NullPointerException ex) {
-            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE,59);
-            cal.set(Calendar.SECOND,59);
-            cal.set(Calendar.MILLISECOND,999);
-            endDate = cal.getTime();
-        }
-        request.setAttribute("startDate", df.format(startDate));
-        request.setAttribute("endDate", df.format(endDate));
+        DaoBills db = DaoFactory.getDaoBills();
         
         switch(action){
             case "showPending": 
                 pending = true;
             case "showAll": 
-                try {
-                    DaoBills db = DaoFactory.getDaoBills();
-                    List<Bill> billsList = db.getBills(user, startDate, endDate, pending);
-                    request.setAttribute("data", "bills");
-                    request.setAttribute("billsList", billsList);
-                    request.setAttribute("pageCaption", "pgcBills");
-                    request.setAttribute("userMenu", getUserMenu());
-                    request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
-                } catch (ServletException ex) {
-                    httpLogger.error("http dispatch error:", ex);
-                } catch (IOException ex) {
-                    coreLogger.error("http dispatch error:", ex);
-                }
+                request.setAttribute("billsList", db.getBills(user, startDate, endDate, pending));
+                dispatchRequest(request, response, "bills", "pgcBills");
                 break;
             case "payBill": 
-                DaoBills db = DaoFactory.getDaoBills();
                 db.payBill(Integer.parseInt((String) request.getParameter("billId"))); 
-                request.setAttribute("data", "actionResult");
                 request.setAttribute("pageText", "lblIdPaymentSuccessful");
-                request.setAttribute("userMenu", getUserMenu());
-                try {
-                    request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
-                } catch (ServletException ex) {
-                    httpLogger.error("http dispatch error:", ex);
-                } catch (IOException ex) {
-                    coreLogger.error("http dispatch error:", ex);
-                }
+                dispatchRequest(request, response, "actionResult", "pgcBills");
                 break;
             default: displayMenu(request, response);
         }
     }
     
     private void processCalls(HttpServletRequest request, HttpServletResponse response){
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        Date startDate = getStartDateOrStartOfMonth(request, df);
+        Date endDate = getEndDateOrEndOfMonth(request, df);
+        request.setAttribute("endDate", df.format(endDate));
+        request.setAttribute("startDate", df.format(startDate));
+        
         String action = (String)request.getParameter("action");
         if (action==null) action = "";
         
         HttpSession ses = request.getSession();
         User user = (User) ses.getAttribute("currentUser");
-        
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        Date startDate;
-        Date endDate;
-        Calendar cal = Calendar.getInstance();
-        
-        try {
-            startDate = df.parse((String)request.getParameter("startDate"));
-        } catch (ParseException |NullPointerException ex) {
-            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE,0);
-            cal.set(Calendar.SECOND,0);
-            cal.set(Calendar.MILLISECOND,0);
-            startDate = cal.getTime();
-        }
-        
-        
-        try {
-            endDate = df.parse((String)request.getParameter("endDate"));
-        } catch (ParseException|NullPointerException ex) {
-            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE,59);
-            cal.set(Calendar.SECOND,59);
-            cal.set(Calendar.MILLISECOND,999);
-            endDate = cal.getTime();
-        }
-        request.setAttribute("startDate", df.format(startDate));
-        request.setAttribute("endDate", df.format(endDate));
-        
+
         DaoCalls daoCalls = DaoFactory.getDaoCalls();
-        
         
         switch(action){
             case "showMy":
-                try {
-                    List<Call> callsList = daoCalls.getCalls(user, startDate, endDate);
-                    request.setAttribute("data", "callsListing");
-                    request.setAttribute("callsList", callsList);
-                    request.setAttribute("pageCaption", "pgcCalls");
-                    request.setAttribute("userMenu", getUserMenu());
-                    request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
-                } catch (ServletException ex) {
-                    httpLogger.error("http dispatch error:", ex);
-                } catch (IOException ex) {
-                    coreLogger.error("http dispatch error:", ex);
-                }
+                request.setAttribute("callsList", daoCalls.getCalls(user, startDate, endDate));
+                dispatchRequest(request, response, "callsListing", "pgcCalls");
                 break;
             case "registerForm":
-                try {
-                    request.setAttribute("registerDate", df.format(Calendar.getInstance().getTime()));
-                    request.setAttribute("data", "callRegisterForm");
-                    request.setAttribute("pageCaption", "pgcRegisterCall");
-                    request.setAttribute("userMenu", getUserMenu());
-                    request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
-                } catch (ServletException ex) {
-                    httpLogger.error("http dispatch error:", ex);
-                } catch (IOException ex) {
-                    coreLogger.error("http dispatch error:", ex);
-                }
+                request.setAttribute("registerDate", df.format(Calendar.getInstance().getTime()));
+                dispatchRequest(request, response, "callRegisterForm", "pgcRegisterCall");
                 break; 
             case "registerComplete":
                 Date registerDate;
@@ -284,16 +241,13 @@ class AbonentCommand implements Command {
                     registerDate = Calendar.getInstance().getTime();
                 }
                 
-                request.setAttribute("registerDate", registerDate);
-                request.setAttribute("pageCaption", "pgcRegisterCall");
-                
                 int duration=0;
                 try {
                     duration = Integer.parseInt((String) request.getParameter("duration"));
                 } catch (NumberFormatException|NullPointerException numberFormatException) {
                     coreLogger.error("Error getting duration while registering a call", numberFormatException);
-                    
                 }
+
                 double cost=0;
                 try {
                     cost = Double.parseDouble((String) request.getParameter("cost"));
@@ -306,19 +260,11 @@ class AbonentCommand implements Command {
                 call.setDuration(duration);
                 call.setCost(cost);
                 call.setUsersId(user.getId());
-                
                 daoCalls.registerCall(call);
                 
-                request.setAttribute("data", "actionResult");
+                request.setAttribute("registerDate", registerDate);
                 request.setAttribute("pageText", "lblCallRegistrationSuccessful");
-                request.setAttribute("userMenu", getUserMenu());
-                try {
-                    request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
-                } catch (ServletException ex) {
-                    httpLogger.error("http dispatch error:", ex);
-                } catch (IOException ex) {
-                    coreLogger.error("http dispatch error:", ex);
-                }
+                dispatchRequest(request, response, "actionResult", "pgcRegisterCall");
                 break;
             default: displayMenu(request, response); break;
         }
