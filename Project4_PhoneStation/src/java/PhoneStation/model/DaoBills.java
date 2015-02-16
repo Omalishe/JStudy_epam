@@ -7,6 +7,7 @@ package PhoneStation.model;
 
 import PhoneStation.beans.User;
 import PhoneStation.beans.Bill;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,7 +43,7 @@ public class DaoBills {
 
     private List<Bill> getBillsByUserID(int userID, Date startDate, Date endDate, boolean pending) {
         List<Bill> bills = new ArrayList<>();
-        String sql = "select * from pay_bills where date_issued between ? and ?"+(pending?" and is_payed=false ":"")+(userID==-1?"":" users_id = ? ");
+        String sql = "select * from pay_bills where date_issued between ? and ?"+(pending?" and is_payed=false ":"")+(userID==-1?"":" and users_id = ? ");
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(sql);
@@ -82,7 +83,18 @@ public class DaoBills {
     }
 
     public boolean createBill(int selectedUserID, Date startDate, Date endDate) {
-        return false; //TODO still got to implement this
+        try {
+            CallableStatement statement = connection.prepareCall("Call create_bill(?,?,?)");
+            statement.setInt(1, selectedUserID);
+            statement.setDate(2, new java.sql.Date(startDate.getTime()));
+            statement.setDate(3, new java.sql.Date(endDate.getTime()));
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            sqlLogger.error("Error performing query: ", ex);
+            return false;
+        }
+        
     }
     
     @Override

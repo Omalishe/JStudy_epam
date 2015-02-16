@@ -135,29 +135,26 @@
         <thead>
             <tr>
                 <th><fmt:message key="thDate"/></th>
+                <th><fmt:message key="thUser"/></th>
                 <th><fmt:message key="thDateIssued"/></th>
                 <th><fmt:message key="thAmount"/></th>
-                <th><fmt:message key="thPay"/></th>
             </tr>
         </thead>
         <tbody>
         <c:forEach var="billEntry" items="${billsList}">
             <tr>
                 <td>${billEntry.dateIssued}</td>
+                <td>${billEntry.usersId}</td>
                 <td>${billEntry.payMonth}</td>
                 <td>${billEntry.amount}</td>
-                <td>
-                    <c:if test="${billEntry.isPayed}==true">
-                    <input type="hidden" name ="billId" value="${billEntry.id}">
-                    <button class="btn btn-success" type="submit" name="action" value="payBill"><fmt:message key="btnPayBill"/></button>
-                    </c:if>
-                </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
         </div>    
         <input type="hidden" name="section" value ="bills">
+        <button class="btn btn-success" type="submit" name="action" value="createBill"><fmt:message key="btnAdd"/></button>
+        
         </fieldset>
     </form>
 </c:if>

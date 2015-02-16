@@ -30,8 +30,8 @@ CREATE TABLE `connected_services` (
   PRIMARY KEY (`users_id`,`services_id`),
   KEY `fk_users_has_services_services1_idx` (`services_id`),
   KEY `fk_users_has_services_users_idx` (`users_id`),
-  CONSTRAINT `fk_users_has_services_services1` FOREIGN KEY (`services_id`) REFERENCES `services` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_users_has_services_users` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_users_has_services_services1` FOREIGN KEY (`services_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_users_has_services_users` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -61,8 +61,8 @@ CREATE TABLE `pay_bills` (
   `is_payed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`users_id`),
   KEY `fk_pay_bills_users1_idx` (`users_id`),
-  CONSTRAINT `fk_pay_bills_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  CONSTRAINT `fk_pay_bills_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +71,7 @@ CREATE TABLE `pay_bills` (
 
 LOCK TABLES `pay_bills` WRITE;
 /*!40000 ALTER TABLE `pay_bills` DISABLE KEYS */;
+INSERT INTO `pay_bills` VALUES (4,1,'2015-02-17 01:17:37','2015-02-01',698.5,1),(5,1,'2015-02-17 01:17:49','2015-02-01',578.5,1),(6,1,'2015-02-17 01:17:51','2015-02-01',578.5,0),(7,1,'2015-02-17 01:45:03','2015-02-01',578.5,0);
 /*!40000 ALTER TABLE `pay_bills` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +90,7 @@ CREATE TABLE `placed_calls` (
   `users_id` int(11) NOT NULL,
   PRIMARY KEY (`id`,`users_id`),
   KEY `fk_placed_calls_users1_idx` (`users_id`),
-  CONSTRAINT `fk_placed_calls_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_placed_calls_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,8 +144,8 @@ CREATE TABLE `used_services` (
   PRIMARY KEY (`users_id`,`services_id`),
   KEY `fk_users_has_services1_services1_idx` (`services_id`),
   KEY `fk_users_has_services1_users1_idx` (`users_id`),
-  CONSTRAINT `fk_users_has_services1_services1` FOREIGN KEY (`services_id`) REFERENCES `services` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_users_has_services1_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_users_has_services1_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_users_has_services1_services1` FOREIGN KEY (`services_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -154,6 +155,7 @@ CREATE TABLE `used_services` (
 
 LOCK TABLES `used_services` WRITE;
 /*!40000 ALTER TABLE `used_services` DISABLE KEYS */;
+INSERT INTO `used_services` VALUES (1,1,'2015-02-17',100),(1,4,'2015-02-17',20);
 /*!40000 ALTER TABLE `used_services` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +215,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'alterne','1',NULL,'r23',1,0),(3,'july','22',NULL,'09309',1,0),(4,'vinsent','33','2015-02-15 22:00:00','30498',0,0),(6,'admin','1234','2015-02-15 22:00:00','',1,1);
+INSERT INTO `users` VALUES (1,'alterne','1',NULL,'r23',0,0),(3,'july','22',NULL,'09309',1,0),(4,'vinsent','33','2015-02-15 22:00:00','30498',0,0),(6,'admin','1234','2015-02-15 22:00:00','',1,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,4 +266,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-16 18:21:17
+-- Dump completed on 2015-02-17  1:45:47

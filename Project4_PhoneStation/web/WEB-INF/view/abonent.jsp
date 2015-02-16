@@ -75,7 +75,7 @@
                 <td>${billEntry.payMonth}</td>
                 <td>${billEntry.amount}</td>
                 <td>
-                    <c:if test="${billEntry.isPayed}!=true">
+                    <c:if test="${billEntry.isPayed!=true}">
                         <form action="abonent" method="post">
                             <input type="hidden" name ="billId" value="${billEntry.id}">
                             <input type="hidden" name="section" value ="bills">
