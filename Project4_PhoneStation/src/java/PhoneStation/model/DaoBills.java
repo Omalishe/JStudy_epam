@@ -82,7 +82,7 @@ public class DaoBills {
     }
 
     public boolean createBill(int selectedUserID, Date startDate, Date endDate) {
-        return false;
+        return false; //TODO still got to implement this
     }
     
     @Override

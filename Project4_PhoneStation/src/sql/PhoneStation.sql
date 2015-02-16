@@ -41,7 +41,7 @@ CREATE TABLE `connected_services` (
 
 LOCK TABLES `connected_services` WRITE;
 /*!40000 ALTER TABLE `connected_services` DISABLE KEYS */;
-INSERT INTO `connected_services` VALUES (1,1),(3,1),(1,2),(1,3),(3,3),(1,4);
+INSERT INTO `connected_services` VALUES (1,1),(3,1),(3,3),(1,4);
 /*!40000 ALTER TABLE `connected_services` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +90,7 @@ CREATE TABLE `placed_calls` (
   PRIMARY KEY (`id`,`users_id`),
   KEY `fk_placed_calls_users1_idx` (`users_id`),
   CONSTRAINT `fk_placed_calls_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `placed_calls` (
 
 LOCK TABLES `placed_calls` WRITE;
 /*!40000 ALTER TABLE `placed_calls` DISABLE KEYS */;
-INSERT INTO `placed_calls` VALUES (1,'2015-02-15 00:00:00',20,30.5,1),(2,'2015-02-15 00:00:00',10,60.5,1),(3,'2015-02-15 00:00:00',30,50.5,1),(4,'2015-02-15 00:00:00',23,432,1),(5,'2015-02-15 00:00:00',34,0,1),(6,'2015-02-15 00:00:00',4,5,1);
+INSERT INTO `placed_calls` VALUES (1,'2015-02-15 00:00:00',20,30.5,1),(2,'2015-02-15 00:00:00',10,60.5,1),(3,'2015-02-15 00:00:00',30,50.5,1),(4,'2015-02-15 00:00:00',23,432,1),(5,'2015-02-15 00:00:00',34,0,1),(6,'2015-02-15 00:00:00',4,5,1),(7,'2015-02-16 00:00:00',10,0,1);
 /*!40000 ALTER TABLE `placed_calls` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +124,7 @@ CREATE TABLE `services` (
 
 LOCK TABLES `services` WRITE;
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
-INSERT INTO `services` VALUES (1,'internet',100),(2,'outbound calls',20),(3,'cute number',10),(4,'over 15 minutes discount',20);
+INSERT INTO `services` VALUES (1,'internet',100),(3,'cute number',10),(4,'over 15 minutes discount',20);
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,4 +264,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-16  1:35:38
+-- Dump completed on 2015-02-16 16:01:06

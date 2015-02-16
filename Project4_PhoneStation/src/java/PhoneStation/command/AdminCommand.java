@@ -335,8 +335,8 @@ public class AdminCommand implements Command{
                 request.setAttribute("data", "actionResult");
                 dispatchRequest(request, response, "actionResult", "pgcAddAbonent");
                 break;
-            case "editAbonent": //changeAbonentStatus(selectedUserID,true,request,response); break;
-            case "editAbonentCompletion"://changeAbonentStatus(selectedUserID,false,request,response);break;
+            case "editAbonent": break;
+            case "editAbonentCompletion": break;
             case "deleteAbonent": 
                 int selectedUserId = getSelectedUserId(request);
                 if (daoUsers.deleteUser(selectedUserID)) request.setAttribute("pageText", "lblUserDeletionSuccessful");
@@ -347,23 +347,4 @@ public class AdminCommand implements Command{
         }
     }
 
-    private void changeAbonentStatus(int selectedUserID, boolean enabled, HttpServletRequest request, HttpServletResponse response) {
-        DaoUsers ds = DaoFactory.getDaoUsers();
-        ds.enableUser(selectedUserID, enabled);
-        
-        if (enabled) request.setAttribute("pageText","lblUserEnableSuccess");
-        else request.setAttribute("pageText","lblUserDisableSuccess");
-
-        request.setAttribute("data", "actionResult");
-        request.setAttribute("userMenu", getUserMenu());
-        request.setAttribute("pageCaption", "pgcUsers");
-
-        try {
-            request.getRequestDispatcher(pages.ADMIN_PAGE.getValue()).forward(request, response);
-        } catch (ServletException ex) {
-            httpLogger.error("http dispatch error:", ex);
-        } catch (IOException ex) {
-            coreLogger.error("http dispatch error:", ex);
-        }
-    }
 }
