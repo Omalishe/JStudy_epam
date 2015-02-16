@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -143,6 +144,35 @@ public class DaoUsers {
     @Override
     protected void finalize() throws Throwable {
         connection.close();
+    }
+
+    public boolean updateUser(User user, boolean passwordChanged) {
+        if (user == null) return false;
+        String sql = "update users set username = ?"
+                + "phone_number = ?"
+                + "is_admin = ?"
+                + "is_blocked = ?"
+                + (passwordChanged?"password = ?":"")
+                + "where id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, user.getUserName());
+            statement.setString(2, user.getPhoneNumber());
+            statement.setBoolean(3, user.isIsAdmin());
+            statement.setBoolean(4, user.isIsDisabled());
+            if (passwordChanged) {
+                statement.setString(5, user.getPassword());
+                statement.setInt(6, user.getId());
+            }else{
+                statement.setInt(5, user.getId());
+            }
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            sqlLogger.error("Error performing query:",ex);
+            return false;
+        }
+        
     }
 
 

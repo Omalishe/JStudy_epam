@@ -291,7 +291,7 @@ public class AdminCommand implements Command{
         request.setAttribute("selectedUserId", selectedUserID);
         
         DaoUsers daoUsers = DaoFactory.getDaoUsers();
-        
+        User user = null;
         switch(action){
             case "showAll":
                 request.setAttribute("usersList", daoUsers.getUsers());
@@ -300,7 +300,7 @@ public class AdminCommand implements Command{
             case "addAbonentForm": 
                 dispatchRequest(request, response, "addAbonentForm", "pgcAddAbonent");
                 break;
-            case "addAbonentCompletion":
+            case "addAbonentCompletion":{
                 String username="";
                 String password="";
                 String phoneNumber="";
@@ -320,7 +320,7 @@ public class AdminCommand implements Command{
                 if (!validated){
                     request.setAttribute("pageText", "lblAbonentRegistrationFailure");
                 }else{
-                    User user = new User();
+                    user = new User();
                     user.setIsAdmin(isAdmin);
                     user.setUserName(username);
                     user.setPassword(password);
@@ -333,12 +333,50 @@ public class AdminCommand implements Command{
                 }
 
                 request.setAttribute("data", "actionResult");
-                dispatchRequest(request, response, "actionResult", "pgcAddAbonent");
+                dispatchRequest(request, response, "actionResult", "pgcAddAbonent");}
                 break;
-            case "editAbonent": break;
-            case "editAbonentCompletion": break;
+            case "editAbonent": 
+                user = daoUsers.getUserById(selectedUserID);
+                request.setAttribute("editedUser", user);
+                dispatchRequest(request, response, "editAbonentForm", "pgcEditAbonent");
+                break;
+            case "editAbonentCompletion":{
+                user = daoUsers.getUserById(selectedUserID);
+                
+                String username="";
+                String password="";
+                String phoneNumber="";
+                
+                boolean isAdmin = (request.getParameter("isAdmin")!=null);
+                boolean isBlocked = (request.getParameter("isBlocked")!=null);
+                
+                boolean validated=true;
+                try {
+                    username = request.getParameter("username");
+                    password = request.getParameter("password");
+                    phoneNumber = request.getParameter("phoneNumber");
+                } catch (NullPointerException e) {
+                    validated=false;
+                }
+                
+                if (!validated){
+                    request.setAttribute("pageText", "lblAbonentModificationFailure");
+                }else{
+                    user.setIsAdmin(isAdmin);
+                    user.setUserName(username);
+                    user.setPassword(password);
+                    user.setIsDisabled(isBlocked);
+                    user.setPhoneNumber(phoneNumber);
+                    
+                    if(daoUsers.updateUser(user, !"".equals(password)))request.setAttribute("pageText", "lblAbonentModificationSucessful");
+                    else request.setAttribute("pageText", "lblAbonentModificationFailure");
+                }
+
+                request.setAttribute("data", "actionResult");
+                dispatchRequest(request, response, "actionResult", "pgcAddAbonent");}
+                
+                break;
             case "deleteAbonent": 
-                int selectedUserId = getSelectedUserId(request);
                 if (daoUsers.deleteUser(selectedUserID)) request.setAttribute("pageText", "lblUserDeletionSuccessful");
                 else request.setAttribute("pageText", "lblUserDeletionFailure");
                 dispatchRequest(request, response, "actionResult", "pgcUsers");

@@ -230,6 +230,53 @@
         </fieldset>
 </c:if>
     
+<c:if test="${data=='editAbonentForm'}">
+    <form action="admin" method="post">
+        <div class="col-lg-6">
+            <div class="control-group">
+                <div class="controls">
+                <label class="control-label" for="username"><fmt:message key='lblLogin'/></label>
+                    <input value="${editedUser.userName}" name="username" placeholder="<fmt:message key='plhLogin'/>" class="input-xlarge" type="text">
+                </div>  
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                <label class="control-label" for="password"><fmt:message key='lblPassword'/></label>
+                    <input name="password" placeholder="<fmt:message key='plhPassword'/>" class="input-xlarge" type="password">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                <label class="control-label" for="phoneNumber"><fmt:message key='lblPhone'/></label>
+                    <input value="${editedUser.phoneNumber}" name="phoneNumber" placeholder="<fmt:message key='plhPhone'/>" class="input-xlarge" type="text">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input name="isAdmin" class="input-xlarge" type="checkbox" <c:if test="${editedUser.isAdmin}">checked="true"</c:if> >
+                    <label class="control-label" for="isAdmin"><fmt:message key='lblIsAdmin'/></label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input name="isBlocked" class="input-xlarge" type="checkbox" <c:if test="${editedUser.isDisabled}">checked="true"</c:if> >
+                    <label class="control-label" for="isBlocked"><fmt:message key='lblIsBlocked'/></label>
+                </div>
+            </div>
+            <div class="control-group">
+                
+                <div class="controls">
+                    <button class="btn btn-success" type="submit" name="action" value="editAbonentCompletion"><fmt:message key="btnEdit"/></button>
+                </div>
+            </div>
+            
+            <input type="hidden" name="selectedUserId" value ="${editedUser.id}">
+            <input type="hidden" name="section" value ="abonents">
+        </div>
+    </form>
+</c:if>    
+
 <c:if test="${data=='addAbonentForm'}">
     <form action="admin" method="post">
         <div class="col-lg-6">
@@ -274,8 +321,7 @@
             <input type="hidden" name="section" value ="abonents">
         </div>
     </form>
-</c:if>    
-
+</c:if> 
 
     
     
