@@ -18,6 +18,7 @@ public class Bill {
     private Date payMonth;
     private double amount;
     private boolean isPayed;
+    private String userName;
 
     public int getId() {
         return id;
@@ -65,6 +66,14 @@ public class Bill {
 
     public void setIsPayed(boolean isPayed) {
         this.isPayed = isPayed;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
     
 }

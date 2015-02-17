@@ -42,7 +42,16 @@ public class DaoCalls {
     
     private List<Call> getCallsByUserId(int userID, Date startDate, Date endDate) {
         List<Call> calls = new ArrayList<>();
-        String sql = "select * from placed_calls where time_start between ? and ?"+(userID==-1?"":" and users_id = ? ");
+        String sql ="select \n" +
+                    "placed_calls.id as id,\n" +
+                    "placed_calls.time_start as time_start,\n" +
+                    "placed_calls.duration as duration, \n" +
+                    "placed_calls.cost as cost,\n" +
+                    "placed_calls.users_id as users_id,\n" +
+                    "users.username as username\n" +
+                    "from placed_calls \n" +
+                    "left join users on users.id = placed_calls.users_id\n"
+                + "where time_start between ? and ?"+(userID==-1?"":" and users_id = ? ");
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(sql);
@@ -57,6 +66,7 @@ public class DaoCalls {
                 call.setDuration(resultSet.getInt("duration"));
                 call.setCost(resultSet.getDouble("cost"));
                 call.setUsersId(resultSet.getInt("users_id"));
+                call.setUserName(resultSet.getString("username"));
                 calls.add(call);
             }
             return calls;

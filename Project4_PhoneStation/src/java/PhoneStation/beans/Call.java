@@ -17,6 +17,7 @@ public class Call {
     private int duration;
     private double cost;
     private int usersId;
+    private String userName;
 
     public int getId() {
         return id;
@@ -56,5 +57,13 @@ public class Call {
 
     public void setUsersId(int usersId) {
         this.usersId = usersId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

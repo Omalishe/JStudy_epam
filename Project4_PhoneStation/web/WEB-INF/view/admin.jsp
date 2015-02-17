@@ -144,7 +144,7 @@
         <c:forEach var="billEntry" items="${billsList}">
             <tr>
                 <td>${billEntry.dateIssued}</td>
-                <td>${billEntry.usersId}</td>
+                <td>${billEntry.userName}</td>
                 <td>${billEntry.payMonth}</td>
                 <td>${billEntry.amount}</td>
             </tr>
@@ -200,7 +200,7 @@
         <c:forEach var="callEntry" items="${callsList}">
             <tr>
                 <td>${callEntry.timeStart}</td>
-                <td>${callEntry.timeStart}</td>
+                <td>${callEntry.userName}</td>
                 <td>${callEntry.duration}</td>
                 <td>${callEntry.cost}</td>
             </tr>

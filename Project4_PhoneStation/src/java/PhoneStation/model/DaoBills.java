@@ -43,7 +43,16 @@ public class DaoBills {
 
     private List<Bill> getBillsByUserID(int userID, Date startDate, Date endDate, boolean pending) {
         List<Bill> bills = new ArrayList<>();
-        String sql = "select * from pay_bills where date_issued between ? and ?"+(pending?" and is_payed=false ":"")+(userID==-1?"":" and users_id = ? ");
+        String sql = 
+                "select pay_bills.id as id,\n" +
+                "pay_bills.users_id as users_id,\n" +
+                "pay_bills.date_issued as date_issued,\n" +
+                "pay_bills.pay_month as pay_month,\n" +
+                "pay_bills.amount as amount, \n" +
+                "pay_bills.is_payed as is_payed,\n" +
+                "users.username as username from pay_bills\n" +
+                "left join users on users.id = pay_bills.users_id "
+                + "where date_issued between ? and ?"+(pending?" and is_payed=false ":"")+(userID==-1?"":" and users_id = ? ");
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(sql);
@@ -55,8 +64,9 @@ public class DaoBills {
                 Bill bill = new Bill();
                 bill.setId(resultSet.getInt("id"));
                 bill.setUsersId(resultSet.getInt("users_id"));
+                bill.setUserName(resultSet.getString("username"));
                 bill.setDateIssued(resultSet.getDate("date_issued"));
-                bill.setDateIssued(resultSet.getDate("pay_month"));
+                bill.setPayMonth(resultSet.getDate("pay_month"));
                 bill.setAmount(resultSet.getDouble("amount"));
                 bill.setIsPayed(resultSet.getBoolean("is_payed"));
                 bills.add(bill);
