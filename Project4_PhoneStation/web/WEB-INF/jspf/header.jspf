@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <c:if test="${!empty language}">
+            <fmt:setLocale value="${language}" scope="session" />
+        </c:if>
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script>
@@ -39,7 +42,12 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li><a class="navbar-link">${currentUser.userName}</a></li>
                         </ul>
+                        
                     </c:if>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a class="navbar-link" href = "${pageContext.request.pathInfo}?locale=en">en</a></li>
+                            <li><a class="navbar-link" href = "${pageContext.request.pathInfo}?locale=uk">uk</a></li>
+                        </ul>
                 </div>
             </div>
         </nav>

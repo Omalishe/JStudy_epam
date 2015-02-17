@@ -39,15 +39,9 @@ public class AuthFilter implements Filter {
         
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser==null){
-            req.setAttribute("textLogin", "Loginische");
-            req.setAttribute("textPassword", "Parolishche");
-            req.setAttribute("textSubmit", "submitishe");
             req.getRequestDispatcher(pages.LOGIN_PAGE.getValue()).forward(request, response);
         }else
         {
-            //res.s
-            //if(currentUser.isIsAdmin()) req.getRequestDispatcher(pages.ADMIN_URL.getValue()).forward(request, response);
-            //else req.getRequestDispatcher(pages.ABONENT_URL.getValue()).forward(request, response);
             if (currentUser.isIsAdmin()){
                 if (req.getServletPath().equals("/admin")) chain.doFilter(request, response);
                 else res.sendRedirect("admin");
@@ -55,40 +49,21 @@ public class AuthFilter implements Filter {
                 if (req.getServletPath().equals("/abonent")) chain.doFilter(request, response);
                 else res.sendRedirect("abonent");
             }
-            
         }
-        //chain.doFilter(request, response);
-         
     }
 
-    /**
-     * Return the filter configuration object for this filter.
-     * @return 
-     */
     public FilterConfig getFilterConfig() {
         return (this.filterConfig);
     }
 
-    /**
-     * Set the filter configuration object for this filter.
-     *
-     * @param filterConfig The filter configuration object
-     */
     public void setFilterConfig(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
     }
 
-    /**
-     * Destroy method for this filter
-     */
     @Override
     public void destroy() {        
     }
 
-    /**
-     * Init method for this filter
-     * @param filterConfig
-     */
     @Override
     public void init(FilterConfig filterConfig) {        
         this.filterConfig = filterConfig;
@@ -97,9 +72,6 @@ public class AuthFilter implements Filter {
         }
     }
 
-    /**
-     * Return a String representation of this object.
-     */
     @Override
     public String toString() {
         if (filterConfig == null) {
