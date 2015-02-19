@@ -49,12 +49,12 @@ class AbonentCommand implements Command {
     
     private UserMenu getUserMenu(){
         UserMenu userMenu = new UserMenu();
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL.getValue()+"?section=services&action=showMy","mneShowMyServices"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL.getValue()+"?section=services&action=showAll","mneShowAllServices"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL.getValue()+"?section=calls&action=showMy","mneShowMyCalls"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL.getValue()+"?section=bills&action=showAll","mneShowAllBills"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL.getValue()+"?section=bills&action=showPending","mneShowPendingBills"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL.getValue()+"?section=calls&action=registerForm","mnePlaceACall"));
+        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=services&action=showMy","mneShowMyServices"));
+        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=services&action=showAll","mneShowAllServices"));
+        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=calls&action=showMy","mneShowMyCalls"));
+        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=bills&action=showAll","mneShowAllBills"));
+        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=bills&action=showPending","mneShowPendingBills"));
+        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=calls&action=registerForm","mnePlaceACall"));
         return userMenu;
     }
     
@@ -62,7 +62,7 @@ class AbonentCommand implements Command {
         httpRequest.setAttribute("userMenu", getUserMenu());
         httpRequest.setAttribute("pageCaption", "pgcAbonentPage");
         try {
-            httpRequest.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(httpRequest, httpResponse);
+            httpRequest.getRequestDispatcher(pages.ABONENT_PAGE).forward(httpRequest, httpResponse);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {
@@ -123,7 +123,7 @@ class AbonentCommand implements Command {
         request.setAttribute("pageCaption", pageCaption);
         request.setAttribute("userMenu", getUserMenu());
         try {
-            request.getRequestDispatcher(pages.ABONENT_PAGE.getValue()).forward(request, response);
+            request.getRequestDispatcher(pages.ABONENT_PAGE).forward(request, response);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {

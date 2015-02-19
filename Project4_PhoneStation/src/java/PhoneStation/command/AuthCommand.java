@@ -26,7 +26,7 @@ class AuthCommand implements Command {
         if (action!=null&&action.equals("logout")){
             httpRequest.getSession().invalidate();
             try {
-                httpResponse.sendRedirect(pages.INDEX_PAGE.getValue());
+                httpResponse.sendRedirect(pages.INDEX_PAGE);
             } catch (IOException ex) {
             }
         }else{
@@ -45,15 +45,15 @@ class AuthCommand implements Command {
                 ses.setAttribute("currentUser", currentUser);
                 try {
                     if (currentUser.isIsAdmin()) {
-                        httpResponse.sendRedirect(pages.ADMIN_URL.getValue());
+                        httpResponse.sendRedirect(pages.ADMIN_URL);
                     } else {
-                        httpResponse.sendRedirect(pages.ABONENT_URL.getValue());
+                        httpResponse.sendRedirect(pages.ABONENT_URL);
                     }
                 } catch (IOException iOException) {
                 }
             } else {
                 try {
-                httpResponse.sendRedirect(pages.INDEX_PAGE.getValue());
+                httpResponse.sendRedirect(pages.INDEX_PAGE);
                 } catch (IOException ex) {
                 }
             }

@@ -54,11 +54,11 @@ public class AdminCommand implements Command{
     
     private UserMenu getUserMenu(){
         UserMenu userMenu = new UserMenu();
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL.getValue()+"?section=services&action=showAll","mneShowAllServices"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL.getValue()+"?section=bills&action=showPending","mneShowPendingBills"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL.getValue()+"?section=bills&action=showAll","mneShowAllBills"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL.getValue()+"?section=calls&action=showAll","mneShowAllCalls"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL.getValue()+"?section=abonents&action=showAll","mneShowAllAbonents"));
+        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=services&action=showAll","mneShowAllServices"));
+        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=bills&action=showPending","mneShowPendingBills"));
+        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=bills&action=showAll","mneShowAllBills"));
+        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=calls&action=showAll","mneShowAllCalls"));
+        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=abonents&action=showAll","mneShowAllAbonents"));
         return userMenu;
     }
     
@@ -66,7 +66,7 @@ public class AdminCommand implements Command{
         httpRequest.setAttribute("userMenu", getUserMenu());
         httpRequest.setAttribute("pageCaption", "pgcAdminPage");
         try {
-            httpRequest.getRequestDispatcher(pages.ADMIN_PAGE.getValue()).forward(httpRequest, httpResponse);
+            httpRequest.getRequestDispatcher(pages.ADMIN_PAGE).forward(httpRequest, httpResponse);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {
@@ -127,7 +127,7 @@ public class AdminCommand implements Command{
         request.setAttribute("pageCaption", pageCaption);
         request.setAttribute("userMenu", getUserMenu());
         try {
-            request.getRequestDispatcher(pages.ADMIN_PAGE.getValue()).forward(request, response);
+            request.getRequestDispatcher(pages.ADMIN_PAGE).forward(request, response);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {

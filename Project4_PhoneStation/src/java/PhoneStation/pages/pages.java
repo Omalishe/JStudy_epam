@@ -9,33 +9,13 @@ package PhoneStation.pages;
  *
  * @author oleksandr
  */
-public enum pages {
-    ERROR_PAGE("/WEB-INF/view/printableError.jsp"),
-    ADMIN_URL("admin"),
-    ADMIN_PAGE("/WEB-INF/view/admin.jsp"),
-    ABONENT_URL("abonent"),
-    ABONENT_PAGE("/WEB-INF/view/abonent.jsp"),
-    LOGIN_URL("logon"),
-    LOGIN_PAGE("/WEB-INF/view/login.jsp"),
-    
-    INDEX_PAGE("index.jsp")
-    
-    ;
-    private String value;
-
-    private pages(String v) {
-        this.value =v;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return this.getValue(); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    
-    
+public final class pages {
+    public static final String ERROR_PAGE="/WEB-INF/view/printableError.jsp";
+    public static final String ADMIN_URL="admin";
+    public static final String ADMIN_PAGE="/WEB-INF/view/admin.jsp";
+    public static final String ABONENT_URL="abonent";
+    public static final String ABONENT_PAGE="/WEB-INF/view/abonent.jsp";
+    public static final String LOGIN_URL="logon";
+    public static final String LOGIN_PAGE="/WEB-INF/view/login.jsp";
+    public static final String INDEX_PAGE="index.jsp";
 }

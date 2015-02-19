@@ -39,7 +39,7 @@ public class AuthFilter implements Filter {
         
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser==null){
-            req.getRequestDispatcher(pages.LOGIN_PAGE.getValue()).forward(request, response);
+            req.getRequestDispatcher(pages.LOGIN_PAGE).forward(request, response);
         }else
         {
             if (currentUser.isIsAdmin()){
