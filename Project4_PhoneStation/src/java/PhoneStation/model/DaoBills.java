@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.model;
 
 import PhoneStation.beans.User;
@@ -19,8 +14,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author oleksandr
+ * Data Access Object to perform different actions on "Bill" DB Entities
+ * @author Oleksandr Malishevskyi
  */
 public class DaoBills {
     Logger sqlLogger = LogManager.getLogger("app.sql");
@@ -92,6 +87,10 @@ public class DaoBills {
         }
     }
 
+    /**
+     * calls stored DB procedure which performs several SQL requests and creates 
+     * a totaling bill, holding amounts of costs and calls in given Date period
+     */
     public boolean createBill(int selectedUserID, Date startDate, Date endDate) {
         try {
             CallableStatement statement = connection.prepareCall("Call create_bill(?,?,?)");

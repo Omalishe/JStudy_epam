@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.controller;
 
 import java.io.IOException;
@@ -16,6 +11,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * This filter is the first filter in chain and its purpose is do detect and set 
+ * language to display user pages
+ * @author Oleksandr Malishevskyi
+ */
 public class LocaleFilter implements Filter {
     
     private FilterConfig filterConfig = null;
@@ -30,7 +30,10 @@ public class LocaleFilter implements Filter {
             Locale browserLocale = request.getLocale();
             Locale sessionLocale = (Locale) ((HttpServletRequest)request).getSession().getAttribute("userLocale");
             String userLocale = request.getParameter("locale");
-            
+            /*
+            First, we try to retrieve locale from user query, then, if it's null,
+            from user session. If it's not in session yet, we get browser preferenses.
+            */
             Locale chosenLocale = null;
             
             if (userLocale!=null){

@@ -1,4 +1,9 @@
 package PhoneStation.beans;
+
+/**
+* A POJO describing the "User" DB Entity
+* @author Oleksandr Malishevskyi
+*/
 public class User {
     private String userName;
     private boolean isAdmin;

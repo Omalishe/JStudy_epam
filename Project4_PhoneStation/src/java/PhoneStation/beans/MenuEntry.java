@@ -1,17 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.beans;
 
 /**
- *
- * @author oleksandr
+ * A JavaBean representing the menu entry in user menu, displayed on pages. 
+ * Objects of this class are stored in UserMenu's "items" property and are 
+ * printed onto JSP pages on each iteration of JSTL's forEach
+ * @author Oleksandr Malishevskyi
  */
 public class MenuEntry {
-    private String location;
-    private String title;
+    private String location; //where the "href" attribute of <a> tag has to point
+    private String title; //contents of the <a></a> and what users sees in menu
 
     public MenuEntry() {
     }
@@ -20,7 +17,6 @@ public class MenuEntry {
         this.location = location;
         this.title = title;
     }
-
     
     public String getLocation() {
         return location;
@@ -34,9 +30,6 @@ public class MenuEntry {
         return title;
     }
 
-    /**
-     * @param title the title to set
-     */
     public void setTitle(String title) {
         this.title = title;
     }

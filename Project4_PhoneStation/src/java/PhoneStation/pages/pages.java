@@ -1,14 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * It's a "wrapper" class to hold relative paths to front-end pages. 
+ * Its use allows to hold all paths in one place and change them in one place
+ * rather than searching and replacing all over the source files
  */
 package PhoneStation.pages;
 
-/**
- *
- * @author oleksandr
- */
 public final class pages {
     public static final String ERROR_PAGE="/WEB-INF/view/printableError.jsp";
     public static final String ADMIN_URL="admin";

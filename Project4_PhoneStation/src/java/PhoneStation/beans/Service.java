@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.beans;
 
 /**
- *
- * @author oleksandr
+ * A POJO describing the "Service" DB Entity
+ * @author Oleksandr Malishevskyi
  */
 public class Service {
     private Integer id;

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.controller;
 
 import PhoneStation.beans.User;
@@ -19,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author oleksandr
+ * This is second filter in chain and is set to login/lougout, admin and abonent pages
+ * to check if user's logged in. Another purpose is to direct user to right page for him, 
+ * i. e. if it is admin - redirect him to "/admin"
+ * @author Oleksandr Malishevskyi
  */
 public class AuthFilter implements Filter {
     

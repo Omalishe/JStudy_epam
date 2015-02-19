@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.model;
 
 import PhoneStation.beans.User;
@@ -14,8 +9,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author oleksandr
+ * Data Access Object to perform different authentication and identification 
+ * of User by means of DB Data
+ * @author Oleksandr Malishevskyi
  */
 public class DaoAuth {
     Connection connection;

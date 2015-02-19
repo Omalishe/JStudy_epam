@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.command;
 
 import PhoneStation.beans.User;
@@ -12,8 +7,8 @@ import java.io.IOException;
 import javax.servlet.http.*;
 
 /**
- *
- * @author oleksandr
+ * This command is called from  auth filter to identify user and let him to log im or log out 
+ * @author Oleksandr Malishevskyi
  */
 class AuthCommand implements Command {
 
@@ -41,7 +36,7 @@ class AuthCommand implements Command {
                 }
             }
             
-            if (currentUser!=null) { //still is not indetified
+            if (currentUser!=null) { 
                 ses.setAttribute("currentUser", currentUser);
                 try {
                     if (currentUser.isIsAdmin()) {
@@ -51,7 +46,7 @@ class AuthCommand implements Command {
                     }
                 } catch (IOException iOException) {
                 }
-            } else {
+            } else {//still is not identified
                 try {
                 httpResponse.sendRedirect(pages.INDEX_PAGE);
                 } catch (IOException ex) {

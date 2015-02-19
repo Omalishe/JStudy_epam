@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.model;
 
 import java.sql.Connection;
@@ -14,8 +9,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author oleksandr
+ * Main DB entities dispatcher. Creates and holds single instance for each DB entity
+ * and returns it to any command, when command asks for any
+ * @author Oleksandr Malishevskyi
  */
 public class DaoFactory {
 

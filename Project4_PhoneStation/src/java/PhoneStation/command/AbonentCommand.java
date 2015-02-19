@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.command;
 
 import PhoneStation.beans.User;
-import PhoneStation.beans.Service;
 import PhoneStation.beans.Call;
-import PhoneStation.beans.Bill;
 import PhoneStation.beans.*;
 import PhoneStation.model.*;
 import PhoneStation.pages.pages;
@@ -18,14 +11,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import org.apache.logging.log4j.*;
 
 /**
- *
- * @author oleksandr
+ * This class holds actions for any query from abonent page 
+ * @author Oleksandr Malishevskyi
  */
 class AbonentCommand implements Command {
     private static Logger httpLogger = LogManager.getLogger("app.http");
@@ -72,7 +64,6 @@ class AbonentCommand implements Command {
     }
     
     private Date getStartDateOrStartOfMonth(HttpServletRequest request, DateFormat df){
-        //DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Calendar cal = Calendar.getInstance();
         Date startDate;
         try {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PhoneStation.command;
 
 import PhoneStation.beans.MenuEntry;
@@ -27,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 
 /**
- *
- * @author oleksandr
+ * This class holds actions for any query from admin page 
+ * @author Oleksandr Malishevskyi
  */
 public class AdminCommand implements Command{
 
@@ -76,7 +71,6 @@ public class AdminCommand implements Command{
     }
     
     private Date getStartDateOrStartOfMonth(HttpServletRequest request, DateFormat df){
-        //DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Calendar cal = Calendar.getInstance();
         Date startDate;
         try {
