@@ -402,9 +402,9 @@ public class AdminCommand implements Command{
                     validated=false;
                 }
                 
+                user.clearLangs();
                 for (String lang:Langs.langs){
                     try{
-                        user.clearLangs();
                         user.addLang(lang, request.getParameter("givenName_"+lang));
                     }catch (NullPointerException ex){
                         httpLogger.error("No lang at user edit: "+lang,ex);

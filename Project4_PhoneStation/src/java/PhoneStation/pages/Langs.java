@@ -13,5 +13,6 @@ public final class Langs{
     static{
         langs.add("en");
         langs.add("uk");
+        langs.add("ru");
     }
 }

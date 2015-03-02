@@ -150,7 +150,7 @@ CREATE TABLE `services_name_translations` (
 
 LOCK TABLES `services_name_translations` WRITE;
 /*!40000 ALTER TABLE `services_name_translations` DISABLE KEYS */;
-INSERT INTO `services_name_translations` (`services_id`, `lang`, `name`) VALUES (1,'en','internet'),(1,'uk','????????'),(3,'en','cute number'),(3,'uk','Симпатичний номер'),(4,'en','over 15 minutes discount'),(4,'uk','Скидка за 15 хвилин розмов'),(5,'en','good service'),(5,'uk','Добра послуга');
+INSERT INTO `services_name_translations` (`services_id`, `lang`, `name`) VALUES (1,'en','internet'),(1,'ru','интернет'),(1,'uk','інтернет'),(3,'en','cute number'),(3,'ru','Красивый номер'),(3,'uk','Симпатичний номер'),(4,'en','over 15 minutes discount'),(4,'ru','Скидка за 15 минут бесед'),(4,'uk','Знижка за 15 хвилин розмов'),(5,'en','One year loyalty discount'),(5,'ru','Скидка за год лояльности'),(5,'uk','Знижка за рік лояльності');
 /*!40000 ALTER TABLE `services_name_translations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -267,7 +267,7 @@ CREATE TABLE `users_given_name_translations` (
 
 LOCK TABLES `users_given_name_translations` WRITE;
 /*!40000 ALTER TABLE `users_given_name_translations` DISABLE KEYS */;
-INSERT INTO `users_given_name_translations` (`users_id`, `lang`, `given_name`) VALUES (1,'en','Malishevskyi Oleksandr'),(1,'uk','Ð?Ð°Ð»Ñ?Ñ?ÐµÐ²Ñ?Ñ?ÐºÐ¸Ð¹ Ð?Ð»ÐµÐºÑ?Ð°Ð½Ð´'),(3,'en','Kozyuba Julia'),(3,'uk','Козюба Юлія'),(4,'en','Vinsent Yorkshire'),(4,'uk','Вінсент Собак'),(6,'en','Admin'),(6,'uk','Адміністратор'),(9,'en','null'),(9,'uk','Ð?Ñ?Ñ?ÐµÑ?ÐµÐ½ÐºÐ¾ Ð?Ð»ÐµÐºÑ?Ð°Ð½Ð´Ñ?');
+INSERT INTO `users_given_name_translations` (`users_id`, `lang`, `given_name`) VALUES (1,'en','Malishevskyi Oleksandr'),(1,'ru','Малишевский Александр'),(1,'uk','Малішевський Олександр'),(3,'en','Kozyuba Julia'),(3,'ru','Козюба Юлия'),(3,'uk','Козюба Юлія'),(4,'en','Vinsent Yorkshire'),(4,'ru','Винсент Ван Дог'),(4,'uk','Вінсент Собак'),(6,'en','Admin'),(6,'ru','Его Величество'),(6,'uk','Адміністратор'),(9,'en','Kucherenko Alex'),(9,'ru','Торговец Чёрным Золотом'),(9,'uk','Кучеренко Олександр');
 /*!40000 ALTER TABLE `users_given_name_translations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -396,4 +396,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-02  9:36:30
+-- Dump completed on 2015-03-02 10:18:07

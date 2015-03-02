@@ -32,8 +32,10 @@
         validate-atmost-once-period-in-seconds="0" 
         wrap-jdbc-objects="false">
         
-        <property name="URL" value="jdbc:mysql://localhost:3306/PhoneStation?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8"/>
+        <property name="URL" value="jdbc:mysql://localhost:3306/PhoneStation?zeroDateTimeBehavior=convertToNull"/>
         <property name="User" value="root"/>
         <property name="Password" value="root"/>
+        <property name="useUnicode" value="true"/>
+        <property name="characterEncoding" value="utf8"/>
     </jdbc-connection-pool>
 </resources>
