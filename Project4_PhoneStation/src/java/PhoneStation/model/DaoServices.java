@@ -6,8 +6,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,11 +24,9 @@ public class DaoServices {
     
     private Connection connection;
     
-    
     void setConnection(Connection connection) {
         this.connection=connection;
     }
-    
     
     public List<Service> getServices(User user){
         if (user==null) return getServicesByUserID(-1);
@@ -45,16 +46,26 @@ public class DaoServices {
                 preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, userID);
             }else{
-                String sql = "select id as service_id, name as service_name, price as service_price from services";
+                String sql = "select id as service_id, price as service_price,  "
+                        + "services_name_translations.lang as lang, "
+                        + "services_name_translations.name as service_name "
+                        + "from services "
+                        + "left join services_name_translations as services_name_translations "
+                        + "on services_name_translations.services_id = services.id ";
                 preparedStatement = connection.prepareStatement(sql);
             }
             ResultSet resultSet = preparedStatement.executeQuery();
+            int curId=0;
+            Service sv = new Service();
             while (resultSet.next()){
-                Service sv = new Service();
-                sv.setId(resultSet.getInt("service_id"));
-                sv.setName(resultSet.getString("service_name"));
-                sv.setPrice(resultSet.getDouble("service_price"));
-                services.add(sv);
+                if (curId!=resultSet.getInt("service_id")){
+                    curId =resultSet.getInt("service_id");
+                    sv = new Service();
+                    sv.setId(resultSet.getInt("service_id"));
+                    sv.setPrice(resultSet.getDouble("service_price"));
+                    services.add(sv);
+                }
+                sv.addLang(resultSet.getString("lang"), resultSet.getString("service_name"));
             }
             return services;
         } catch (SQLException e) {
@@ -68,18 +79,42 @@ public class DaoServices {
     }
     
     public boolean addService(Service svc){
-        String sqlStatement;
-        sqlStatement= "Insert into services values(null,?,?)";
+        if (svc==null) return false;
+        
         try {
-            PreparedStatement preparedStatement;
-            preparedStatement = connection.prepareStatement(sqlStatement);
-            preparedStatement.setString(1, svc.getName());
-            preparedStatement.setDouble(2, svc.getPrice());
-            preparedStatement.executeUpdate();
+            Statement st = connection.createStatement();
+
+            connection.setAutoCommit(false);
+            
+            st.executeUpdate("Insert into services values(null,'"+svc.getPrice()+"')",Statement.RETURN_GENERATED_KEYS);
+            
+            int genId=-1;
+            ResultSet rs = st.getGeneratedKeys();
+            if (rs.next()) genId = rs.getInt(1);
+            else throw new SQLException("no autoincrement");
+            
+            Map<String,String> givenNames = svc.getNameLangMap();
+            for (Map.Entry en:givenNames.entrySet()){
+                st.addBatch(" insert into services_name_translations values ("+genId+",'"+en.getKey()+"','"+en.getValue()+"') ");
+            }
+            st.executeBatch();
+            connection.commit();
+            
             return true;
         } catch (SQLException e) {
-            sqlLogger.error("Error performing sql query: ", e);
+            sqlLogger.error("Error performing sql query: ",e);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                sqlLogger.error("Error rolling transaction back: ", ex);
+            }
             return false;
+        }finally{
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                sqlLogger.error("Error setting autocommit to true: ", ex);
+            }
         }
     }
     
@@ -123,18 +158,21 @@ public class DaoServices {
     }
     
     public Service getServiceById(int serviceId) {
-        String sql = "select * from services where id = ?";
+        String sql = "select * from services "
+                + "left join services_name_translations "
+                + "on services_name_translations.services_id = services.id "
+                + "where id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, serviceId);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
-                Service svc = new Service();
+            Service svc = new Service();
+            while(resultSet.next()){
                 svc.setId(resultSet.getInt("id"));
-                svc.setName(resultSet.getString("name"));
                 svc.setPrice(resultSet.getDouble("price"));
-                return svc;
+                svc.addLang(resultSet.getString("lang"), resultSet.getString("name"));
             }
+            return svc;
         } catch (SQLException ex) {
             sqlLogger.error("Error performing query: ", ex);
         }
@@ -142,18 +180,32 @@ public class DaoServices {
     }
     
     public boolean updateService(Service svc) {
-        String sql = "update services set name = ?, price = ? where id = ?";
-        
+        if (svc==null) return false;
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, svc.getName());
-            statement.setDouble(2, svc.getPrice());
-            statement.setInt(3, svc.getId());
-            statement.executeUpdate();
+            Statement st = connection.createStatement();
+            connection.setAutoCommit(false);
+            st.addBatch("update services set price = '"+svc.getPrice()+"' where id = "+svc.getId()+" ");
+            Map<String,String> givenNames = svc.getNameLangMap();
+            for (Map.Entry en:givenNames.entrySet()){
+                st.addBatch("replace into services_name_translations values("+svc.getId()+",'"+en.getKey()+"','"+en.getValue()+"') ");
+            }
+            st.executeBatch();
+            connection.commit();
             return true;
         } catch (SQLException ex) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                sqlLogger.error("Error rolling transaction back: ", ex);
+            }
             sqlLogger.error("Error performing sql query: ", ex);
             return false;
+        }finally{
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                sqlLogger.error("Error stting autocommit to true: ", ex);
+            }
         }
     }
     
@@ -165,10 +217,4 @@ public class DaoServices {
             super.finalize();
         }
     }
-
-
-
-    
-    
-    
 }

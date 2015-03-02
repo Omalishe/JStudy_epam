@@ -8,4 +8,21 @@
     <tag-class>PhoneStation.jstl_helpers.localeSelector</tag-class>
     <body-content>empty</body-content>
   </tag>
+  <tag>
+    <name>displayNameSelector</name>
+    <tag-class>PhoneStation.jstl_helpers.displayNameSelector</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>lang</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <name>obj</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.Object</type>
+    </attribute>
+  </tag>
 </taglib>

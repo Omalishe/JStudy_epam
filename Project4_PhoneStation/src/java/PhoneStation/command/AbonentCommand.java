@@ -4,7 +4,7 @@ import PhoneStation.beans.User;
 import PhoneStation.beans.Call;
 import PhoneStation.beans.*;
 import PhoneStation.model.*;
-import PhoneStation.pages.pages;
+import PhoneStation.pages.Pages;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,12 +41,12 @@ class AbonentCommand implements Command {
     
     private UserMenu getUserMenu(){
         UserMenu userMenu = new UserMenu();
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=services&action=showMy","mneShowMyServices"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=services&action=showAll","mneShowAllServices"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=calls&action=showMy","mneShowMyCalls"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=bills&action=showAll","mneShowAllBills"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=bills&action=showPending","mneShowPendingBills"));
-        userMenu.addEntry(new MenuEntry(pages.ABONENT_URL+"?section=calls&action=registerForm","mnePlaceACall"));
+        userMenu.addEntry(new MenuEntry(Pages.ABONENT_URL+"?section=services&action=showMy","mneShowMyServices"));
+        userMenu.addEntry(new MenuEntry(Pages.ABONENT_URL+"?section=services&action=showAll","mneShowAllServices"));
+        userMenu.addEntry(new MenuEntry(Pages.ABONENT_URL+"?section=calls&action=showMy","mneShowMyCalls"));
+        userMenu.addEntry(new MenuEntry(Pages.ABONENT_URL+"?section=bills&action=showAll","mneShowAllBills"));
+        userMenu.addEntry(new MenuEntry(Pages.ABONENT_URL+"?section=bills&action=showPending","mneShowPendingBills"));
+        userMenu.addEntry(new MenuEntry(Pages.ABONENT_URL+"?section=calls&action=registerForm","mnePlaceACall"));
         return userMenu;
     }
     
@@ -54,7 +54,7 @@ class AbonentCommand implements Command {
         httpRequest.setAttribute("userMenu", getUserMenu());
         httpRequest.setAttribute("pageCaption", "pgcAbonentPage");
         try {
-            httpRequest.getRequestDispatcher(pages.ABONENT_PAGE).forward(httpRequest, httpResponse);
+            httpRequest.getRequestDispatcher(Pages.ABONENT_PAGE).forward(httpRequest, httpResponse);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {
@@ -96,25 +96,12 @@ class AbonentCommand implements Command {
         return endDate;
     }
     
-    private int getSelectedUserId(HttpServletRequest request){
-        int selectedUserID;
-        try {
-            selectedUserID = Integer.parseInt((String) request.getParameter("selectedUserId"));
-        } catch (NumberFormatException numberFormatException) {
-            coreLogger.error("Error getting selected user id;", numberFormatException);
-            selectedUserID=-1;
-        } catch (NullPointerException e){
-            selectedUserID=-1;
-        }
-        return selectedUserID;
-    }
-    
     public void dispatchRequest(HttpServletRequest request, HttpServletResponse response, String data, String pageCaption){
         request.setAttribute("data", data);
         request.setAttribute("pageCaption", pageCaption);
         request.setAttribute("userMenu", getUserMenu());
         try {
-            request.getRequestDispatcher(pages.ABONENT_PAGE).forward(request, response);
+            request.getRequestDispatcher(Pages.ABONENT_PAGE).forward(request, response);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {
@@ -136,7 +123,7 @@ class AbonentCommand implements Command {
                     
                 request.setAttribute("servicesList", ds.getServices(user));
                 
-                String data = "";
+                String data;
                 if ("showMy".equals(action))data="myServices";
                 else data="services";
                 

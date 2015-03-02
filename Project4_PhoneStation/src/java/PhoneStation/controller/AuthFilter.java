@@ -1,7 +1,7 @@
 package PhoneStation.controller;
 
 import PhoneStation.beans.User;
-import PhoneStation.pages.pages;
+import PhoneStation.pages.Pages;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,7 +36,7 @@ public class AuthFilter implements Filter {
         
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser==null){
-            req.getRequestDispatcher(pages.LOGIN_PAGE).forward(request, response);
+            req.getRequestDispatcher(Pages.LOGIN_PAGE).forward(request, response);
         }else
         {
             if (currentUser.isIsAdmin()){
@@ -58,7 +58,7 @@ public class AuthFilter implements Filter {
     }
 
     @Override
-    public void destroy() {        
+    public void destroy() {
     }
 
     @Override
@@ -74,7 +74,7 @@ public class AuthFilter implements Filter {
         if (filterConfig == null) {
             return ("AuthFilter()");
         }
-        StringBuffer sb = new StringBuffer("AuthFilter(");
+        StringBuilder sb = new StringBuilder("AuthFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());

@@ -1,18 +1,11 @@
 package PhoneStation.jstl_helpers;
 
+import PhoneStation.pages.Langs;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
-
-/*
-<ul class="nav navbar-nav navbar-right">
-                            <li><a class="navbar-link" href = "${pageContext.request.pathInfo}?locale=en">en</a></li>
-                            <li><a class="navbar-link" href = "${pageContext.request.pathInfo}?locale=uk">uk</a></li>
-                        </ul>
-
-*/
 
 /**
  * Custom tag to display available languages menu
@@ -25,8 +18,9 @@ public class localeSelector extends SimpleTagSupport {
         JspWriter out = getJspContext().getOut();
         try {
             out.println("<ul class=\"nav navbar-nav navbar-right\">");
-            out.println("<li><a class=\"navbar-link\" href = \"?locale=en\">en</a></li>");
-            out.println("<li><a class=\"navbar-link\" href = \"?locale=uk\">uk</a></li>");
+            for (String lang:Langs.langs){
+                out.println("<li><a class=\"navbar-link\" href = \"?locale="+lang+"\">"+lang+"</a></li>");
+            }
             out.println("</ul>");
 
             JspFragment f = getJspBody();

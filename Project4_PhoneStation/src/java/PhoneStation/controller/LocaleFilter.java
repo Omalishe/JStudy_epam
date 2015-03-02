@@ -45,6 +45,12 @@ public class LocaleFilter implements Filter {
             }
             ((HttpServletRequest)request).getSession().setAttribute("userLocale", chosenLocale);
             request.setAttribute("language", chosenLocale.getLanguage());
+            request.setCharacterEncoding("UTF-8");
+            
+            
+            response.setContentType("text/html; charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+
             chain.doFilter(request, response);
     }
 

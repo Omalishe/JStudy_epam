@@ -9,7 +9,8 @@ import PhoneStation.beans.User;
 import PhoneStation.model.DaoBills;
 import PhoneStation.model.DaoCalls;
 import PhoneStation.model.DaoUsers;
-import PhoneStation.pages.pages;
+import PhoneStation.pages.Langs;
+import PhoneStation.pages.Pages;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -49,11 +50,11 @@ public class AdminCommand implements Command{
     
     private UserMenu getUserMenu(){
         UserMenu userMenu = new UserMenu();
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=services&action=showAll","mneShowAllServices"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=bills&action=showPending","mneShowPendingBills"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=bills&action=showAll","mneShowAllBills"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=calls&action=showAll","mneShowAllCalls"));
-        userMenu.addEntry(new MenuEntry(pages.ADMIN_URL+"?section=abonents&action=showAll","mneShowAllAbonents"));
+        userMenu.addEntry(new MenuEntry(Pages.ADMIN_URL+"?section=services&action=showAll","mneShowAllServices"));
+        userMenu.addEntry(new MenuEntry(Pages.ADMIN_URL+"?section=bills&action=showPending","mneShowPendingBills"));
+        userMenu.addEntry(new MenuEntry(Pages.ADMIN_URL+"?section=bills&action=showAll","mneShowAllBills"));
+        userMenu.addEntry(new MenuEntry(Pages.ADMIN_URL+"?section=calls&action=showAll","mneShowAllCalls"));
+        userMenu.addEntry(new MenuEntry(Pages.ADMIN_URL+"?section=abonents&action=showAll","mneShowAllAbonents"));
         return userMenu;
     }
     
@@ -61,7 +62,7 @@ public class AdminCommand implements Command{
         httpRequest.setAttribute("userMenu", getUserMenu());
         httpRequest.setAttribute("pageCaption", "pgcAdminPage");
         try {
-            httpRequest.getRequestDispatcher(pages.ADMIN_PAGE).forward(httpRequest, httpResponse);
+            httpRequest.getRequestDispatcher(Pages.ADMIN_PAGE).forward(httpRequest, httpResponse);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {
@@ -121,7 +122,7 @@ public class AdminCommand implements Command{
         request.setAttribute("pageCaption", pageCaption);
         request.setAttribute("userMenu", getUserMenu());
         try {
-            request.getRequestDispatcher(pages.ADMIN_PAGE).forward(request, response);
+            request.getRequestDispatcher(Pages.ADMIN_PAGE).forward(request, response);
         } catch (ServletException ex) {
             httpLogger.error("http dispatch error:", ex);
         } catch (IOException ex) {
@@ -146,16 +147,25 @@ public class AdminCommand implements Command{
                 dispatchRequest(request, response, "services", "pgcServices");
                 break;
             case "serviceAddForm": 
+                request.setAttribute("languages", Langs.langs);
                 dispatchRequest(request, response, "serviceAddForm", "pgcAddService");
                 break;
             case "serviceAddCompletion":
             {
                 String serviceName = "";
                 double cost = 0.0;
+                Service svc = new Service();
                 
                 boolean validated=true;
+                for (String lang:Langs.langs){
+                    try{
+                        svc.addLang(lang, request.getParameter("name_"+lang));
+                    }catch (NullPointerException ex){
+                        httpLogger.error("No lang at service add: "+lang,ex);
+                    }
+                }
+                
                 try {
-                    serviceName = request.getParameter("serviceName");
                     cost = Double.parseDouble(request.getParameter("cost"));
                 } catch (NullPointerException|NumberFormatException e) {
                     validated=false;
@@ -164,8 +174,6 @@ public class AdminCommand implements Command{
                 if (!validated){
                     request.setAttribute("pageText", "lblServiceRegistrationFailure");
                 }else{
-                    Service svc = new Service();
-                    svc.setName(serviceName);
                     svc.setPrice(cost);
                     if (ds.addService(svc)) request.setAttribute("pageText", "lblServiceRegistrationSucessful");
                     else request.setAttribute("pageText", "lblServiceRegistrationFailure");
@@ -183,6 +191,7 @@ public class AdminCommand implements Command{
                     serviceId = -1;
                 }
                 Service svc = ds.getServiceById(serviceId);
+                request.setAttribute("languages", Langs.langs);
                 request.setAttribute("editedService", svc);
                 dispatchRequest(request, response, "serviceEditForm", "pgcServiceEdit");
             }   
@@ -202,9 +211,7 @@ public class AdminCommand implements Command{
                 
                 String serviceName = "";
                 double cost = 0.0;
-                
                 try {
-                    serviceName = request.getParameter("serviceName");
                     cost = Double.parseDouble(request.getParameter("cost"));
                 } catch (NullPointerException|NumberFormatException e) {
                     validated=false;
@@ -213,7 +220,14 @@ public class AdminCommand implements Command{
                 if (!validated){
                     request.setAttribute("pageText", "lblServiceModificationFailure");
                 }else{
-                    svc.setName(serviceName);
+                    svc.clearLangs();
+                    for (String lang:Langs.langs){
+                        try{
+                            svc.addLang(lang, request.getParameter("name_"+lang));
+                        }catch (NullPointerException ex){
+                            httpLogger.error("No lang at service edit: "+lang,ex);
+                        }
+                    }
                     svc.setPrice(cost);
                     if (ds.updateService(svc)) request.setAttribute("pageText", "lblServiceModificationSuccessful");
                     else request.setAttribute("pageText", "lblServiceModificationFailure");
@@ -317,6 +331,7 @@ public class AdminCommand implements Command{
                 dispatchRequest(request, response, "usersListing", "pgcUsers");
                 break; 
             case "addAbonentForm": 
+                request.setAttribute("languages", Langs.langs);
                 dispatchRequest(request, response, "addAbonentForm", "pgcAddAbonent");
                 break;
             case "addAbonentCompletion":{
@@ -328,6 +343,8 @@ public class AdminCommand implements Command{
                 boolean isBlocked = (request.getParameter("isBlocked")!=null);
                 
                 boolean validated=true;
+                user = new User();
+                
                 try {
                     username = request.getParameter("username");
                     password = request.getParameter("password");
@@ -336,10 +353,17 @@ public class AdminCommand implements Command{
                     validated=false;
                 }
                 
+                for (String lang:Langs.langs){
+                    try{
+                        user.addLang(lang, request.getParameter("givenName_"+lang));
+                    }catch (NullPointerException ex){
+                        httpLogger.error("No lang at user add: "+lang,ex);
+                    }
+                }
+                
                 if (!validated){
                     request.setAttribute("pageText", "lblAbonentRegistrationFailure");
                 }else{
-                    user = new User();
                     user.setIsAdmin(isAdmin);
                     user.setUserName(username);
                     user.setPassword(password);
@@ -356,6 +380,7 @@ public class AdminCommand implements Command{
             case "editAbonent": 
                 user = daoUsers.getUserById(selectedUserID);
                 request.setAttribute("editedUser", user);
+                request.setAttribute("languages", Langs.langs);
                 dispatchRequest(request, response, "editAbonentForm", "pgcEditAbonent");
                 break;
             case "editAbonentCompletion":{
@@ -377,6 +402,15 @@ public class AdminCommand implements Command{
                     validated=false;
                 }
                 
+                for (String lang:Langs.langs){
+                    try{
+                        user.clearLangs();
+                        user.addLang(lang, request.getParameter("givenName_"+lang));
+                    }catch (NullPointerException ex){
+                        httpLogger.error("No lang at user edit: "+lang,ex);
+                    }
+                }
+                
                 if (!validated){
                     request.setAttribute("pageText", "lblAbonentModificationFailure");
                 }else{
@@ -392,7 +426,6 @@ public class AdminCommand implements Command{
 
                 request.setAttribute("data", "actionResult");
                 dispatchRequest(request, response, "actionResult", "pgcEditAbonent");}
-                
                 break;
             case "deleteAbonent": 
                 if (daoUsers.deleteUser(selectedUserID)) request.setAttribute("pageText", "lblUserDeletionSuccessful");
@@ -402,5 +435,4 @@ public class AdminCommand implements Command{
             default: displayMenu(request, response);
         }
     }
-
 }

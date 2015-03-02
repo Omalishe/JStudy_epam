@@ -24,7 +24,7 @@
         <c:forEach var="serviceEntry" items="${servicesList}">
             <tr>
                 <td><input type="checkbox" name="checked_services" value="${serviceEntry.id}"></td>
-                <td>${serviceEntry.name}</td>
+                <td><ch:displayNameSelector lang="${language}" obj="${serviceEntry}"/></td>
                 <td>${serviceEntry.price}</td>
             </tr>
         </c:forEach>

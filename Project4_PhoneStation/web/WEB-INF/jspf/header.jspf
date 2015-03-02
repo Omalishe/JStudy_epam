@@ -43,10 +43,8 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li><a class="navbar-link">${currentUser.userName}</a></li>
                         </ul>
-                        
                     </c:if>
-                        <ch:localeSelector/>
-                        
+                    <ch:localeSelector/>
                 </div>
             </div>
         </nav>

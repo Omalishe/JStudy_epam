@@ -2,7 +2,7 @@ package PhoneStation.command;
 
 import PhoneStation.beans.User;
 import PhoneStation.model.*;
-import PhoneStation.pages.pages;
+import PhoneStation.pages.Pages;
 import java.io.IOException;
 import javax.servlet.http.*;
 
@@ -21,7 +21,7 @@ class AuthCommand implements Command {
         if (action!=null&&action.equals("logout")){
             httpRequest.getSession().invalidate();
             try {
-                httpResponse.sendRedirect(pages.INDEX_PAGE);
+                httpResponse.sendRedirect(Pages.INDEX_PAGE);
             } catch (IOException ex) {
             }
         }else{
@@ -40,15 +40,15 @@ class AuthCommand implements Command {
                 ses.setAttribute("currentUser", currentUser);
                 try {
                     if (currentUser.isIsAdmin()) {
-                        httpResponse.sendRedirect(pages.ADMIN_URL);
+                        httpResponse.sendRedirect(Pages.ADMIN_URL);
                     } else {
-                        httpResponse.sendRedirect(pages.ABONENT_URL);
+                        httpResponse.sendRedirect(Pages.ABONENT_URL);
                     }
                 } catch (IOException iOException) {
                 }
             } else {//still is not identified
                 try {
-                httpResponse.sendRedirect(pages.INDEX_PAGE);
+                httpResponse.sendRedirect(Pages.INDEX_PAGE);
                 } catch (IOException ex) {
                 }
             }

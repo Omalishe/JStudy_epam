@@ -2,6 +2,7 @@
 <form class="form-horizontal" action="auth" method="post">
 <fieldset>
 <legend>${pageTitle}</legend>
+
 <div class="control-group">
     <label class="control-label" for="user_name"><fmt:message key='lblLogin'/></label>
   <div class="controls">

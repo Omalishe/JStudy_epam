@@ -22,7 +22,7 @@
         <tbody>
         <c:forEach var="serviceEntry" items="${servicesList}">
             <tr>
-                <td>${serviceEntry.name}</td>
+                <td><ch:displayNameSelector lang="${language}" obj="${serviceEntry}"/></td>
                 <td>${serviceEntry.price}</td>
                 <td>
                     <form action="admin" method="post">
@@ -49,14 +49,16 @@
 </c:if>
 
 <c:if test="${data=='serviceAddForm'}">
-    <form action="admin" method="post">
+    <form action="admin" method="post" accept-charset="utf-8">
         <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="serviceName"><fmt:message key='lblServiceName'/></label>
-                <div class="controls">
-                    <input name="serviceName" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
+            <c:forEach var="langEntry" items="${languages}">
+                <div class="control-group">
+                    <label class="control-label" for="name_${langEntry}"><fmt:message key='lblServiceName'/> (${langEntry})</label>
+                    <div class="controls">
+                        <input name="name_${langEntry}" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
+                    </div>
                 </div>
-            </div>
+            </c:forEach>
 
             <div class="control-group">
                 <label class="control-label" for="cost"><fmt:message key='lblCost'/></label>
@@ -75,16 +77,17 @@
     </form>
 </c:if> 
     
-    
 <c:if test="${data=='serviceEditForm'}">
-    <form action="admin" method="post">
+    <form action="admin" method="post" accept-charset="utf-8">
         <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="serviceName"><fmt:message key='lblServiceName'/></label>
-                <div class="controls">
-                    <input value="${editedService.name}" name="serviceName" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
+            <c:forEach var="langEntry" items="${languages}">
+                <div class="control-group">
+                    <label class="control-label" for="name_${langEntry}"><fmt:message key='lblServiceName'/> (${langEntry})</label>
+                    <div class="controls">
+                        <input value="<ch:displayNameSelector lang="${langEntry}" obj="${editedService}"/>" name="name_${langEntry}" placeholder="<fmt:message key='plhServiceName'/>" class="input-xlarge" type="text">
+                    </div>
                 </div>
-            </div>
+            </c:forEach>
 
             <div class="control-group">
                 <label class="control-label" for="cost"><fmt:message key='lblCost'/></label>
@@ -122,7 +125,7 @@
                     <c:forEach var="userEntry" items="${usersList}">
                         <option value="${userEntry.id}" 
                                 <c:if test="${selectedUserId==userEntry.id}">selected</c:if> 
-                                >${userEntry.userName}</option>
+                                ><ch:displayNameSelector lang="${language}" obj="${userEntry}"/></option>
                     </c:forEach>
                 </select>
             </div>
@@ -178,7 +181,7 @@
                     <c:forEach var="userEntry" items="${usersList}">
                         <option value="${userEntry.id}"
                                 <c:if test="${selectedUserId==userEntry.id}">selected</c:if> 
-                                >${userEntry.userName}</option>
+                                ><ch:displayNameSelector lang="${language}" obj="${userEntry}"/></option>
                     </c:forEach>
                 </select>
             </div>
@@ -222,6 +225,7 @@
             <tr>
                 <th>Id</th>
                 <th><fmt:message key="thUser"/></th>
+                <th><fmt:message key="thGivenName"/></th>
                 <th><fmt:message key="thPhone"/></th>
                 <th><fmt:message key="thAdmin"/></th>
                 <th><fmt:message key="thBlocked"/></th>
@@ -234,6 +238,7 @@
             <tr>
                 <td>${userEntry.id}</td>
                 <td>${userEntry.userName}</td>
+                <td><ch:displayNameSelector lang="${language}" obj="${userEntry}"/></td>
                 <td>${userEntry.phoneNumber}</td>
                 <td>${userEntry.isAdmin}</td>
                 <td>${userEntry.isDisabled}</td>
@@ -264,7 +269,7 @@
 </c:if>
     
 <c:if test="${data=='editAbonentForm'}">
-    <form action="admin" method="post">
+    <form action="admin" method="post" accept-charset="urf-8">
         <div class="col-lg-6">
             <div class="control-group">
                 <div class="controls">
@@ -272,12 +277,22 @@
                     <input value="${editedUser.userName}" name="username" placeholder="<fmt:message key='plhLogin'/>" class="input-xlarge" type="text">
                 </div>  
             </div>
+                
             <div class="control-group">
                 <div class="controls">
                 <label class="control-label" for="password"><fmt:message key='lblPassword'/></label>
                     <input name="password" placeholder="<fmt:message key='plhPassword'/>" class="input-xlarge" type="password">
                 </div>
             </div>
+            
+            <c:forEach var="langEntry" items="${languages}">
+                <div class="control-group">
+                    <div class="controls">
+                    <label class="control-label" for="givenName_${langEntry}"><fmt:message key='lblGivenName'/> (${langEntry}) </label>
+                        <input value="<ch:displayNameSelector lang="${langEntry}" obj="${editedUser}"/>" name="givenName_${langEntry}" placeholder="<fmt:message key='plhGivenName'/>" class="input-xlarge" type="text">
+                    </div>  
+                </div>
+            </c:forEach>
 
             <div class="control-group">
                 <div class="controls">
@@ -298,7 +313,6 @@
                 </div>
             </div>
             <div class="control-group">
-                
                 <div class="controls">
                     <button class="btn btn-success" type="submit" name="action" value="editAbonentCompletion"><fmt:message key="btnEdit"/></button>
                 </div>
@@ -311,12 +325,12 @@
 </c:if>    
 
 <c:if test="${data=='addAbonentForm'}">
-    <form action="admin" method="post">
+    <form action="admin" method="post" accept-charset="utf-8">
         <div class="col-lg-6">
             <div class="control-group">
                 <div class="controls">
                 <label class="control-label" for="username"><fmt:message key='lblLogin'/></label>
-                    <input value="${user.userName}" name="username" placeholder="<fmt:message key='plhLogin'/>" class="input-xlarge" type="text">
+                    <input name="username" placeholder="<fmt:message key='plhLogin'/>" class="input-xlarge" type="text">
                 </div>  
             </div>
             <div class="control-group">
@@ -325,11 +339,20 @@
                     <input name="password" placeholder="<fmt:message key='plhPassword'/>" class="input-xlarge" type="password">
                 </div>
             </div>
-
+            
+            <c:forEach var="langEntry" items="${languages}">
+                <div class="control-group">
+                    <div class="controls">
+                    <label class="control-label" for="givenName_${langEntry}"><fmt:message key='lblGivenName'/> (${langEntry}) </label>
+                        <input name="givenName_${langEntry}" placeholder="<fmt:message key='plhGivenName'/>" class="input-xlarge" type="text">
+                    </div>  
+                </div>
+            </c:forEach>
+                
             <div class="control-group">
                 <div class="controls">
                 <label class="control-label" for="phoneNumber"><fmt:message key='lblPhone'/></label>
-                    <input value = "${user.phoneNumber}" name="phoneNumber" placeholder="<fmt:message key='plhPhone'/>" class="input-xlarge" type="text">
+                    <input name="phoneNumber" placeholder="<fmt:message key='plhPhone'/>" class="input-xlarge" type="text">
                 </div>
             </div>
             <div class="control-group">
