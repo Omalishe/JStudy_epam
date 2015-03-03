@@ -48,9 +48,7 @@ public class DaoBills {
                 "users.username as username from pay_bills\n" +
                 "left join users on users.id = pay_bills.users_id "
                 + "where date_issued between ? and ?"+(pending?" and is_payed=false ":"")+(userID==-1?"":" and users_id = ? ");
-        PreparedStatement preparedStatement;
-        try {
-            preparedStatement = connection.prepareStatement(sql);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setDate(1, new java.sql.Date(startDate.getTime()));
             preparedStatement.setDate(2, new java.sql.Date(endDate.getTime()));
             if (userID!=-1) preparedStatement.setInt(3, userID);
@@ -75,9 +73,7 @@ public class DaoBills {
 
     public boolean payBill(int billId) {
         String sql = "update pay_bills set is_payed=true where id = ?";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, billId);
             statement.executeUpdate();
             return true;
@@ -92,8 +88,7 @@ public class DaoBills {
      * a totaling bill, holding amounts of costs and calls in given Date period
      */
     public boolean createBill(int selectedUserID, Date startDate, Date endDate) {
-        try {
-            CallableStatement statement = connection.prepareCall("Call create_bill(?,?,?)");
+        try (CallableStatement statement = connection.prepareCall("Call create_bill(?,?,?)")){
             statement.setInt(1, selectedUserID);
             statement.setDate(2, new java.sql.Date(startDate.getTime()));
             statement.setDate(3, new java.sql.Date(endDate.getTime()));

@@ -19,8 +19,7 @@ public class DaoAuth {
     
     public User authenticateUser(String name, String password) {
         String sql = "Select * from users where username = ? and password = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();

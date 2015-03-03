@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,21 +38,24 @@ public class DaoServices {
 
     private List<Service> getServicesByUserID(int userID) {
         List<Service> services = new ArrayList<>();
-        try {
-            PreparedStatement preparedStatement;
-            if (userID!=-1){
-                String sql = "select * from user_services where user_id = ?";
-                preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setInt(1, userID);
-            }else{
-                String sql = "select id as service_id, price as service_price,  "
-                        + "services_name_translations.lang as lang, "
-                        + "services_name_translations.name as service_name "
-                        + "from services "
-                        + "left join services_name_translations as services_name_translations "
-                        + "on services_name_translations.services_id = services.id ";
-                preparedStatement = connection.prepareStatement(sql);
-            }
+        String sql;
+        if (userID!=-1){
+            sql = "select * from user_services where user_id = ?";
+            
+        }else{
+            sql = "select id as service_id, price as service_price,  "
+                    + "services_name_translations.lang as lang, "
+                    + "services_name_translations.name as service_name "
+                    + "from services "
+                    + "left join services_name_translations as services_name_translations "
+                    + "on services_name_translations.services_id = services.id ";
+            
+        }
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            
+            if (userID!=-1) preparedStatement.setInt(1, userID);
+            
             ResultSet resultSet = preparedStatement.executeQuery();
             int curId=0;
             Service sv = new Service();
@@ -81,9 +83,7 @@ public class DaoServices {
     public boolean addService(Service svc){
         if (svc==null) return false;
         
-        try {
-            Statement st = connection.createStatement();
-
+        try (Statement st = connection.createStatement()){
             connection.setAutoCommit(false);
             
             st.executeUpdate("Insert into services values(null,'"+svc.getPrice()+"')",Statement.RETURN_GENERATED_KEYS);
@@ -122,9 +122,8 @@ public class DaoServices {
         String sqlStatement;
         if (enable) sqlStatement= "Insert ignore into connected_services values(?,?)";
         else sqlStatement = "delete from connected_services where users_id = ? and services_id = ?";
-        try {
-            PreparedStatement preparedStatement;
-            preparedStatement = connection.prepareStatement(sqlStatement);
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, svcId);
             preparedStatement.executeUpdate();
@@ -146,8 +145,7 @@ public class DaoServices {
     
     private boolean deleteServiceById(int serviceId){
         String sql = "delete from services where id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, serviceId);
             statement.executeUpdate();
             return true;
@@ -162,8 +160,7 @@ public class DaoServices {
                 + "left join services_name_translations "
                 + "on services_name_translations.services_id = services.id "
                 + "where id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, serviceId);
             ResultSet resultSet = statement.executeQuery();
             Service svc = new Service();
@@ -181,8 +178,7 @@ public class DaoServices {
     
     public boolean updateService(Service svc) {
         if (svc==null) return false;
-        try {
-            Statement st = connection.createStatement();
+        try (Statement st = connection.createStatement()){
             connection.setAutoCommit(false);
             st.addBatch("update services set price = '"+svc.getPrice()+"' where id = "+svc.getId()+" ");
             Map<String,String> givenNames = svc.getNameLangMap();

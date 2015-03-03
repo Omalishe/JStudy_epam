@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,8 +34,7 @@ public class DaoUsers {
                 + "left join users_given_name_translations "
                 + "on users.id = users_given_name_translations.users_id";
         User user = new User();
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             ResultSet resultSet = statement.executeQuery();
             int curId=0;
             while(resultSet.next()){
@@ -65,8 +63,7 @@ public class DaoUsers {
                 + "left join users_given_name_translations "
                 + "on users.id = users_given_name_translations.users_id "
                 + "where id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
@@ -90,9 +87,8 @@ public class DaoUsers {
 
         String query = "insert into users values(null,?,?,?,?,?,?) ";
         
-        try {
+        try (PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS)){
             connection.setAutoCommit(false);
-            PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getPassword());
             statement.setDate(3, addDate);
@@ -137,8 +133,7 @@ public class DaoUsers {
         String sql = "update users set is_blocked = ? where id = ?";
         boolean blocked = !enable;
         
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setBoolean(1, blocked);
             statement.setInt(2, userID);
             statement.executeUpdate();
@@ -169,8 +164,7 @@ public class DaoUsers {
     
     private boolean deleteUserById(int selectedUserID) {
         String sql = "delete from users where id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, selectedUserID);
             statement.executeUpdate();
             return true;
@@ -190,10 +184,7 @@ public class DaoUsers {
         String query = "update users set username = ? , phone_number = ? , is_admin = ? , is_blocked = ? "
                 + (passwordChanged?" , password = ? ":"")
                 + " where id = ?  ";
-        
-        
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)){
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getPhoneNumber());
             statement.setBoolean(3, user.isIsAdmin());

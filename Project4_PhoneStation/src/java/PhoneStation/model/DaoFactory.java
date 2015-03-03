@@ -22,7 +22,7 @@ public class DaoFactory {
     private final static DaoBills daoBills;
     private final static DaoCalls daoCalls;
     
-    private static Logger sqlLogger = LogManager.getLogger("app.sql");
+    private final static Logger sqlLogger = LogManager.getLogger("app.sql");
     
     static {
         try {

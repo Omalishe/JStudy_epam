@@ -47,9 +47,7 @@ public class DaoCalls {
                     "from placed_calls \n" +
                     "left join users on users.id = placed_calls.users_id\n"
                 + "where time_start between ? and ?"+(userID==-1?"":" and users_id = ? ");
-        PreparedStatement preparedStatement;
-        try {
-            preparedStatement = connection.prepareStatement(sql);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setDate(1, new java.sql.Date(startDate.getTime()));
             preparedStatement.setDate(2, new java.sql.Date(endDate.getTime()));
             if (userID!=-1) preparedStatement.setInt(3, userID);
@@ -73,9 +71,8 @@ public class DaoCalls {
 
     public boolean registerCall(Call call) {
         String sql = "insert into placed_calls values (null,?,?,?,?)";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(sql);
+        
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setDate(1, new java.sql.Date(call.getTimeStart().getTime()));
             statement.setInt(2, call.getDuration());
             statement.setDouble(3, call.getCost());
